@@ -4,7 +4,7 @@ Authen::Krb5::Principal		T_PTROBJ_NU
 Authen::Krb5::Admin		T_PTROBJ_NU
 Authen::Krb5::Admin::Config	T_PTROBJ_NU
 Authen::Krb5::Admin::Key	T_PTROBJ_NU
-Authen::Krb5::Admin::Keyblock	T_PTROBJ_NU
+Authen::Krb5::Keyblock  	T_PTROBJ_NU
 Authen::Krb5::Admin::Policy	T_PTROBJ_NU
 Authen::Krb5::Admin::Principal	T_PTROBJ_NU
 

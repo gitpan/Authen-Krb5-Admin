@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Admin.xs,v 1.18 2003/02/05 17:48:03 ajk Exp $
+ * $Id: Admin.xs,v 1.20 2004/12/18 22:58:29 ajk Exp $
  */
 
 #include "EXTERN.h"
@@ -949,10 +949,17 @@ struct kadm5_principal_mit {
 	long				mask;
 };
 
+/* for zeroing structs */
+
+static struct kadm5_policy_mit kadm5_policy_mit_init;
+static struct kadm5_principal_mit kadm5_principal_mit_init;
+static kadm5_config_params kadm5_config_params_init;
+static krb5_key_data krb5_key_data_init;
+
 typedef kadm5_config_params		*Authen__Krb5__Admin__Config;
 typedef krb5_ccache			 Authen__Krb5__Ccache;
 typedef krb5_key_data			*Authen__Krb5__Admin__Key;
-typedef krb5_keyblock			*Authen__Krb5__Admin__Keyblock;
+typedef krb5_keyblock			*Authen__Krb5__Keyblock;
 typedef krb5_principal			 Authen__Krb5__Principal;
 typedef struct kadm5_policy_mit		*Authen__Krb5__Admin__Policy;
 typedef struct kadm5_principal_mit	*Authen__Krb5__Admin__Principal;
@@ -1042,7 +1049,8 @@ kadm5_get_policy(handle, name = "default")
 	Authen::Krb5::Admin	 handle
 	char			*name
     CODE:
-	Newz(0, RETVAL, 1, struct kadm5_policy_mit);
+	New(0, RETVAL, 1, struct kadm5_policy_mit);
+        *RETVAL = kadm5_policy_mit_init;
 	err = kadm5_get_policy(handle, name, &RETVAL->policy);
 	if (err)
 		XSRETURN_UNDEF;
@@ -1075,7 +1083,8 @@ kadm5_get_principal(handle, krb5_princ, mask = KADM5_PRINCIPAL_NORMAL_MASK)
     PREINIT:
 	int i;
     CODE:
-	Newz(0, RETVAL, 1, struct kadm5_principal_mit);	
+	New(0, RETVAL, 1, struct kadm5_principal_mit);	
+        *RETVAL = kadm5_principal_mit_init;
 	err = kadm5_get_principal(handle, krb5_princ, &RETVAL->kadm5_princ,
 	    mask);
 	if (err)
@@ -1210,8 +1219,7 @@ kadm5_randkey_principal(handle, princ)
 	EXTEND(sp, count);
 	for (i = 0; i < count; i++) {
 		ST(i) = sv_newmortal();
-		sv_setref_pv(ST(i), "Authen::Krb5::Admin::Keyblock",
-		    &keys[i]);
+		sv_setref_pv(ST(i), "Authen::Krb5::Keyblock", &keys[i]);
 	}
 	XSRETURN(count);
 
@@ -1245,7 +1253,8 @@ Authen::Krb5::Admin::Config
 new(CLASS)
 	char	*CLASS
     CODE:
-	Newz(0, RETVAL, 1, kadm5_config_params);
+	New(0, RETVAL, 1, kadm5_config_params);
+        *RETVAL = kadm5_config_params_init;
     OUTPUT:
 	RETVAL
 
@@ -1394,7 +1403,8 @@ Authen::Krb5::Admin::Key
 new(CLASS)
 	char	*CLASS
     CODE:
-	Newz(0, RETVAL, 1, krb5_key_data);
+	New(0, RETVAL, 1, krb5_key_data);
+        *RETVAL = krb5_key_data_init;
     OUTPUT:
 	RETVAL
 
@@ -1481,23 +1491,6 @@ DESTROY(key)
 	Safefree(key);
 
  # 
- # Fake krb5_keyblock class--returned by randkey_principal but probably
- # belongs in Authen::Krb5
- # 
-
-MODULE = Authen::Krb5::Admin	PACKAGE = Authen::Krb5::Admin::Keyblock
-
-void
-DESTROY(keyblock)
-	Authen::Krb5::Admin::Keyblock	keyblock
-    CODE:
-	if (keyblock->contents) {
-		memset(keyblock->contents, 0, keyblock->length);
-		free(keyblock->contents);
-		keyblock->contents = NULL;
-	}
-
- # 
  # kadm5_policy_ent_rec class--uses kadm5_policy_mit meta-struct
  # 
 
@@ -1507,7 +1500,8 @@ Authen::Krb5::Admin::Policy
 new(CLASS)
 	char	*CLASS
     CODE:
-	Newz(0, RETVAL, 1, struct kadm5_policy_mit);
+	New(0, RETVAL, 1, struct kadm5_policy_mit);
+        *RETVAL = kadm5_policy_mit_init;
     OUTPUT:
 	RETVAL
 
@@ -1640,7 +1634,8 @@ Authen::Krb5::Admin::Principal
 new(CLASS)
 	char	*CLASS
     CODE:
-	Newz(0, RETVAL, 1, struct kadm5_principal_mit);
+	New(0, RETVAL, 1, struct kadm5_principal_mit);
+        *RETVAL = kadm5_principal_mit_init;
 	if (!RETVAL)
 		XSRETURN_UNDEF;
     OUTPUT:

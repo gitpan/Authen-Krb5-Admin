@@ -1,3 +1,26 @@
+VERSION 0.07
+============
+
+2005-02-19  Andrew J. Korty  <ajk@iu.edu>
+
+	* Makefile.PL: Red Hat installs Kerberos in /usr/kerberos/, so
+	look there too.
+
+	* Admin.xs: Initialize structs correctly.  Calling Newz() is wrong
+	because it sets all bits to zero, which doesn't guarantee that any
+	element but those of type int are properly initialized.
+
+	* Admin.pm, Admin.xs, typemap: Authen::Krb5 now has a keyblock
+	class, so use that instead of a fake one.
+
+2004-02-18  Andrew J. Korty  <ajk@iu.edu>
+
+	* Admin.pm: Add an EXAMPLES section pointing out that examples can
+	be found in the unit tests.  Add a FILES section referring to
+	krb5.conf.  Add a BUGS section explaining missing functionality
+	that probably belongs in Authen::Krb5.  Add perlvar(1) to the SEE
+	ALSO section since it's referenced elsewhere.
+
 VERSION 0.06
 ============
 

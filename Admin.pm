@@ -22,7 +22,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Admin.pm,v 1.15 2004/02/12 02:08:34 ajk Exp $
+# $Id: Admin.pm,v 1.19 2005/02/19 15:36:10 ajk Exp $
 
 package Authen::Krb5::Admin;
 
@@ -188,7 +188,7 @@ require AutoLoader;
 	KRB5_KDB_SUPPORT_DESMD5
 );
 %EXPORT_TAGS = (constants => \@EXPORT_OK);
-$VERSION = '0.06';
+$VERSION = '0.07';
 
 # Preloaded methods go here.
 
@@ -244,14 +244,8 @@ The following classes are provided by this module:
  Authen::Krb5::Admin             handle for performing kadmin operations
  Authen::Krb5::Admin::Config     kadmin configuration parameters
  Authen::Krb5::Admin::Key        key data from principal object
- Authen::Krb5::Admin::Keyblock   fake class for blessing keyblock data
  Authen::Krb5::Admin::Policy     kadmin policies
  Authen::Krb5::Admin::Principal  kadmin principals
-
-The B<Authen::Krb5::Admin::Keyblock> class is only provided so that
-randkey_principal can return blessed objects.  A real class with
-methods for manipulating keyblocks should probably be implemented as
-part of B<Authen::Krb5(3)>.
 
 =head2 Configuration Parameters, Policies, and Principals
 
@@ -267,8 +261,9 @@ classes
 has a constructor I<new> which takes no arguments (except for the
 class name).  The new object may be populated using accessor methods,
 each of which is named for the C struct element it represents.
-Methods always return the current value of the attribute.  If a value
-is provided, the attribute is set to that value, and the new value is
+Methods always return the current value of the attribute, except for
+the I<policy_clear> method, which returns nothing.  If a value is
+provided, the attribute is set to that value, and the new value is
 returned.
 
 All attributes may be modified in each object, but read-only
@@ -498,7 +493,7 @@ I<aux_attributes>
 =item * policy_clear {KADM5_POLICY_CLR}
 
 Not really an attribute--disables the current policy for this
-principal
+principal.  This method doesn't return anything.
 
 =item * princ_expire_time {KADM5_PRINC_EXPIRE_TIME}
 
@@ -598,8 +593,7 @@ parameters will be modified accordingly.  Clears KADM5_PRINCIPAL.
 =item * @keys = $kadm5->randkey_principal($krb5_princ)
 
 Randomize the principal in the database represented by $krb5_princ and
-return the new B<Authen::Krb5::Admin::Keyblock> objects, which have no
-useful methods yet.
+return B<Authen::Krb5::Keyblock> objects.
 
 =item * $success = $kadm5->rename_principal($krb5_princ_from, $krb5_princ_to)
 
@@ -651,12 +645,29 @@ as follows:
 
 =back
 
+=head1 EXAMPLES
+
+See the unit tests included with this software for examlpes.  They can
+be found in the F<t/> subdirectory of the distribution.
+
+=head1 FILES
+
+ krb.conf		Kerberos 5 configuration file
+
+=head1 BUGS
+
+There is no facility for specifying keysalts for methods like
+I<create_principal> and I<modify_principal>.  This facility is
+provided by the Kerberos 5 API and requires an initialized context.
+So it probably makes more sense for B<Authen::Krb5(3)> to handle those
+functions.
+
 =head1 AUTHOR
 
 Andrew J. Korty <ajk@iu.edu>
 
 =head1 SEE ALSO
 
-perl(1), Authen::Krb5(3), Exporter(3), kadmin(8).
+perl(1), perlvar(1), Authen::Krb5(3), Exporter(3), kadmin(8).
 
 =cut

@@ -22,7 +22,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Makefile.PL,v 1.7 2003/07/21 16:08:22 ajk Exp $
+# $Id: Makefile.PL,v 1.8 2004/12/18 17:34:00 ajk Exp $
 
 use ExtUtils::MakeMaker;
 
@@ -30,7 +30,7 @@ use ExtUtils::MakeMaker;
 
 print 'checking for Kerberos 5 prefix ... ';
 my ($PREFIX) = grep { -r $_ . '/include/krb5.h' }
-    qw(/opt/krb5 /usr/local /usr) or die 'Cannot find Kerberos 5';
+    qw(/opt/krb5 /usr/local /usr /usr/kerberos) or die 'Cannot find Kerberos 5';
 print $PREFIX, "\n";
 
 my $KRB5_LIBDIR = join '/', $PREFIX, 'lib';

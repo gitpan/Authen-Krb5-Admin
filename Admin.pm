@@ -1,4 +1,4 @@
-# $Id: Admin.pm,v 1.7 2002/05/29 15:19:10 ajk Exp $
+# $Id: Admin.pm,v 1.8 2002/09/18 12:56:59 ajk Exp $
 
 package Authen::Krb5::Admin;
 
@@ -93,7 +93,7 @@ require AutoLoader;
 	KRB5_KDB_SUPPORT_DESMD5
 );
 %EXPORT_TAGS = (constants => \@EXPORT_OK);
-$VERSION = '0.03';
+$VERSION = '0.04';
 
 # Preloaded methods go here.
 
@@ -423,6 +423,11 @@ Authenticate using the credentials cached in $krb5_ccache.
 =item * $kadm5 = Authen::Krb5::Admin->init_with_password($client[, $password, $service, $kadm5_config])
 
 Authenticate with $password.
+
+=item * $kadm5 = Authen::Krb5::Admin->init_with_skey($client[, $keytab_file, $service, $kadm5_config])
+
+Authenticate using the keytab stored in $keytab_file.  If $keytab_file
+is undef, the default keytab is used.
 
 =item Principal Operations
 

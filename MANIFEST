@@ -6,6 +6,7 @@ MANIFEST
 Makefile.PL
 README
 admin.h
+ppport.h
 t/00-loadme.t
 t/01-config.t
 t/02-policy.t

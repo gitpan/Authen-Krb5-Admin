@@ -1,5 +1,5 @@
 /*
- * $Id: Admin.xs,v 1.8 2002/05/28 21:06:11 ajk Exp $
+ * $Id: Admin.xs,v 1.10 2002/09/18 12:56:59 ajk Exp $
  */
 
 #include "EXTERN.h"
@@ -8,6 +8,7 @@
 #include <krb5.h>
 #include <com_err.h>
 #include "admin.h"
+#include "ppport.h"
 
 static int
 not_here(char *s)
@@ -662,6 +663,23 @@ kadm5_init_with_password(CLASS, client, pw = NULL, service = KADM5_ADMIN_SERVICE
 	krb5_ui_4			 api_version
     CODE:
 	err = kadm5_init_with_password(client, pw, service, config,
+	    struct_version, api_version, &RETVAL);
+	if (err)
+		XSRETURN_UNDEF;
+    OUTPUT:
+	RETVAL
+
+Authen::Krb5::Admin
+kadm5_init_with_skey(CLASS, client, keytab = NULL, service = KADM5_ADMIN_SERVICE, config = NULL, struct_version = KADM5_STRUCT_VERSION, api_version = KADM5_API_VERSION_2)
+	char				*CLASS
+	char				*client
+	char				*keytab
+	char				*service
+	Authen::Krb5::Admin::Config	 config
+	krb5_ui_4			 struct_version
+	krb5_ui_4			 api_version
+    CODE:
+	err = kadm5_init_with_skey(client, keytab, service, config,
 	    struct_version, api_version, &RETVAL);
 	if (err)
 		XSRETURN_UNDEF;

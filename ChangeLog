@@ -1,3 +1,15 @@
+VERSION 0.04
+============
+
+2002-09-18  Andrew J. Korty  <ajk@iu.edu>
+
+	* Admin.pm, Admin.xs: Add support for kadm5_init_with_skey(),
+	which authenticates using a service key stored in a keytab.
+	Thanks to Kevin Meltzer.
+
+	* Admin.xs, ppport.h: Use ppport.h for backward compatibility with
+	older Perl versions.
+
 VERSION 0.03
 ============
 

@@ -1,0 +1,43 @@
+$Id: README,v 1.1 2002/06/05 19:39:16 ajk Exp $
+
+Authen::Krb5::Admin is an object-oriented interface to the Kerberos 5
+admin server.  Currently only MIT KDCs are supported, but the author
+envisions seamless integration with other KDCs.
+
+
+PREREQUISITES
+
+Authen::Krb5::Admin requires Perl 5.005 or greater and Jeff Horwitz's
+Authen::Krb5 module from CPAN.
+
+
+INSTALLATION
+
+To install Authen::Krb5::Admin without testing, run the standard
+sequence:
+
+	perl Makefile.PL
+	make
+	make install
+
+The first step will prompt you for a principal with administrative
+privileges on the KDC for running the test suite.  Re-run this step to
+change which principal to use.
+
+
+TESTING
+
+To run the test suite as part of the install, use
+
+	perl Makefile.PL
+	make test
+	make install
+
+This step requires administrative access to the KDC by the principal
+specified in the first step.  It will create a principal, by default
+"perl_test", which should NOT already exist on the KDC.  If you
+already have a principal called perl_test, change Makefile.PL to use a
+different test principal, and start over.
+
+Andrew J. Korty <ajk@iu.edu>
+Indiana University

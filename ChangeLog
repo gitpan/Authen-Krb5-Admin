@@ -1,0 +1,43 @@
+VERSION 0.03
+============
+
+2002-06-05  Andrew J. Korty  <ajk@iu.edu>
+
+	* README: Added.
+
+2002-05-29  Andrew J. Korty  <ajk@iu.edu>
+
+	* Admin.pm: Use OO notation in documentation.  Mention :constants
+	tag.
+
+VERSION 0.02
+============
+
+2002-05-28  Andrew J. Korty  <ajk@iu.edu>
+
+	* Admin.xs: Like Authen::Krb5, return truth value rather than
+	error.  Set static value for err always so that error function
+	works.
+
+	* Admin.pm: Add POD.
+
+	* t/*.t: Take advantage of magical nature of Authen::Krb5::error
+	and Authen::Krb5::Admin::error return values.
+
+2002-05-25  Andrew J. Korty  <ajk@iu.edu>
+
+	* Admin.xs: In accessor methods, don't automatically set flags
+	that would later result in a bad mask error.  In kadmin methods,
+	automatically unset flags that would cause a bad mask error.
+	(Also updated test scripts).
+
+VERSION 0.01
+============
+
+2002-05-23  Andrew J. Korty  <ajk@iu.edu>
+
+	* Admin.xs: Fixed the way we reference Authen::Krb5::Principal
+	objects, I think.
+
+VERSION 0.00
+============

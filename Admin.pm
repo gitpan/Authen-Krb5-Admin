@@ -1,4 +1,28 @@
-# $Id: Admin.pm,v 1.8 2002/09/18 12:56:59 ajk Exp $
+# Copyright (c) 2002 Andrew J. Korty
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+# OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+
+# $Id: Admin.pm,v 1.14 2004/02/12 01:09:54 ajk Exp $
 
 package Authen::Krb5::Admin;
 
@@ -16,12 +40,49 @@ require AutoLoader;
 @ISA = qw(Exporter DynaLoader);
 
 @EXPORT_OK = qw(
+	ENCTYPE_DES3_CBC_RAW
+	ENCTYPE_DES3_CBC_SHA
+	ENCTYPE_DES3_CBC_SHA1
+	ENCTYPE_DES_CBC_CRC
+	ENCTYPE_DES_CBC_MD4
+	ENCTYPE_DES_CBC_MD5
+	ENCTYPE_DES_CBC_RAW
+	ENCTYPE_DES_HMAC_SHA1
+	ENCTYPE_LOCAL_DES3_HMAC_SHA1
+	ENCTYPE_NULL
+	ENCTYPE_UNKNOWN
 	KADM5_ADMIN_SERVICE
 	KADM5_API_VERSION_1
 	KADM5_API_VERSION_2
 	KADM5_API_VERSION_MASK
 	KADM5_ATTRIBUTES
+	KADM5_AUTH_ADD
+	KADM5_AUTH_CHANGEPW
+	KADM5_AUTH_DELETE
+	KADM5_AUTH_GET
+	KADM5_AUTH_INSUFFICIENT
+	KADM5_AUTH_LIST
+	KADM5_AUTH_MODIFY
+	KADM5_AUTH_SETKEY
 	KADM5_AUX_ATTRIBUTES
+	KADM5_BAD_API_VERSION
+	KADM5_BAD_AUX_ATTR
+	KADM5_BAD_CLASS
+	KADM5_BAD_CLIENT_PARAMS
+	KADM5_BAD_DB
+	KADM5_BAD_HISTORY
+	KADM5_BAD_HIST_KEY
+	KADM5_BAD_LENGTH
+	KADM5_BAD_MASK
+	KADM5_BAD_MIN_PASS_LIFE
+	KADM5_BAD_PASSWORD
+	KADM5_BAD_POLICY
+	KADM5_BAD_PRINCIPAL
+	KADM5_BAD_SERVER_HANDLE
+	KADM5_BAD_SERVER_NAME
+	KADM5_BAD_SERVER_PARAMS
+	KADM5_BAD_STRUCT_VERSION
+	KADM5_BAD_TL_TYPE
 	KADM5_CHANGEPW_SERVICE
 	KADM5_CONFIG_ACL_FILE
 	KADM5_CONFIG_ADBNAME
@@ -43,8 +104,12 @@ require AutoLoader;
 	KADM5_CONFIG_PROFILE
 	KADM5_CONFIG_REALM
 	KADM5_CONFIG_STASH_FILE
+	KADM5_DUP
+	KADM5_FAILURE
 	KADM5_FAIL_AUTH_COUNT
+	KADM5_GSS_ERROR
 	KADM5_HIST_PRINCIPAL
+	KADM5_INIT
 	KADM5_KEY_DATA
 	KADM5_KVNO
 	KADM5_LAST_FAILED
@@ -53,12 +118,28 @@ require AutoLoader;
 	KADM5_MASK_BITS
 	KADM5_MAX_LIFE
 	KADM5_MAX_RLIFE
+	KADM5_MISSING_CONF_PARAMS
 	KADM5_MKVNO
 	KADM5_MOD_NAME
 	KADM5_MOD_TIME
+	KADM5_NEW_LIB_API_VERSION
+	KADM5_NEW_SERVER_API_VERSION
+	KADM5_NEW_STRUCT_VERSION
+	KADM5_NOT_INIT
+	KADM5_NO_RENAME_SALT
+	KADM5_NO_SRV
 	KADM5_OK
+	KADM5_OLD_LIB_API_VERSION
+	KADM5_OLD_SERVER_API_VERSION
+	KADM5_OLD_STRUCT_VERSION
+	KADM5_PASS_Q_CLASS
+	KADM5_PASS_Q_DICT
+	KADM5_PASS_Q_TOOSHORT
+	KADM5_PASS_REUSE
+	KADM5_PASS_TOOSOON
 	KADM5_POLICY
 	KADM5_POLICY_CLR
+	KADM5_POLICY_REF
 	KADM5_PRINCIPAL
 	KADM5_PRINCIPAL_NORMAL_MASK
 	KADM5_PRINC_EXPIRE_TIME
@@ -66,6 +147,7 @@ require AutoLoader;
 	KADM5_PRIV_DELETE
 	KADM5_PRIV_GET
 	KADM5_PRIV_MODIFY
+	KADM5_PROTECT_PRINCIPAL
 	KADM5_PW_EXPIRATION
 	KADM5_PW_HISTORY_NUM
 	KADM5_PW_MAX_LIFE
@@ -73,10 +155,17 @@ require AutoLoader;
 	KADM5_PW_MIN_LENGTH
 	KADM5_PW_MIN_LIFE
 	KADM5_REF_COUNT
+	KADM5_RPC_ERROR
+	KADM5_SECURE_PRINC_MISSING
+	KADM5_SETKEY3_ETYPE_MISMATCH
+	KADM5_SETKEY_DUP_ENCTYPES
+	KADM5_SETV4KEY_INVAL_ENCTYPE
 	KADM5_STRUCT_VERSION
 	KADM5_STRUCT_VERSION_1
 	KADM5_STRUCT_VERSION_MASK
 	KADM5_TL_DATA
+	KADM5_UNK_POLICY
+	KADM5_UNK_PRINC
 	KRB5_KDB_DISALLOW_ALL_TIX
 	KRB5_KDB_DISALLOW_DUP_SKEY
 	KRB5_KDB_DISALLOW_FORWARDABLE
@@ -90,10 +179,16 @@ require AutoLoader;
 	KRB5_KDB_REQUIRES_HW_AUTH
 	KRB5_KDB_REQUIRES_PRE_AUTH
 	KRB5_KDB_REQUIRES_PWCHANGE
+	KRB5_KDB_SALTTYPE_AFS3
+	KRB5_KDB_SALTTYPE_NOREALM
+	KRB5_KDB_SALTTYPE_NORMAL
+	KRB5_KDB_SALTTYPE_ONLYREALM
+	KRB5_KDB_SALTTYPE_SPECIAL
+	KRB5_KDB_SALTTYPE_V4
 	KRB5_KDB_SUPPORT_DESMD5
 );
 %EXPORT_TAGS = (constants => \@EXPORT_OK);
-$VERSION = '0.04';
+$VERSION = '0.05';
 
 # Preloaded methods go here.
 
@@ -148,6 +243,7 @@ The following classes are provided by this module:
 
  Authen::Krb5::Admin             handle for performing kadmin operations
  Authen::Krb5::Admin::Config     kadmin configuration parameters
+ Authen::Krb5::Admin::Key        key data from principal object
  Authen::Krb5::Admin::Keyblock   fake class for blessing keyblock data
  Authen::Krb5::Admin::Policy     kadmin policies
  Authen::Krb5::Admin::Principal  kadmin principals
@@ -164,6 +260,7 @@ objects to represent the entities to be manipulated.  Each of the
 classes
 
 	Authen::Krb5::Admin::Config
+	Authen::Krb5::Admin::Key
 	Authen::Krb5::Admin::Policy
 	Authen::Krb5::Admin::Principal
 
@@ -179,11 +276,11 @@ attributes will be ignored when performing kadmin operations.  These
 attributes are indicated in the documentation for their accessor
 methods.
 
-Each of the C functions that manipulate I<kadm5> structures takes a
-mask argument to indicate which fields should be taken into account.
-The Perl accessor methods take care of the mask for you, assuming that
-when you change a value, you will eventually want it changed on the
-server.
+Each of the C functions that manipulate I<kadm5> principal and policy
+structures takes a mask argument to indicate which fields should be
+taken into account.  The Perl accessor methods take care of the mask
+for you, assuming that when you change a value, you will eventually
+want it changed on the server.
 
 Flags for the read-only fields do not get set automatically because
 they would result in a bad mask error when performing kadmin
@@ -238,6 +335,41 @@ Kerberos 5 configuration profile
 =item * realm {KADM5_CONFIG_REALM}
 
 Kerberos 5 realm name
+
+=item B<Authen::Krb5::Admin::Key>
+
+This class represents key data contained in kadmin principal objects.
+The only methods in this class are the constructor (I<new>, described
+above) and the following accessor methods.
+
+=item * key_contents
+
+Key contents, encrypted with the KDC master key.  This data may not be
+available remotely.
+
+=item * enc_type
+
+Kerberos 5 enctype of the key
+
+=item * key_type
+
+Alias for I<enc_type>
+
+=item * kvno
+
+Key version number
+
+=item * salt_contents
+
+Salt contents, if any (I<ver> > 1)
+
+=item * salt_type
+
+Salt type, if any (I<ver> > 1)
+
+=item * ver
+
+Version number of the underlying I<krb5_key_data> structure
 
 =item B<Authen::Krb5::Admin::Policy>
 
@@ -400,6 +532,7 @@ names as follows:
 	$kadm5_princ	Authen::Krb5::Admin::Principal
 	$krb5_ccache	Authen::Krb5::Ccache
 	$krb5_princ	Authen::Krb5::Principal
+	$success	TRUE if if the call succeeeded, undef otherwise
 
 Everything else is an unblessed scalar value (or an array of them)
 inferable from context.
@@ -431,17 +564,17 @@ is undef, the default keytab is used.
 
 =item Principal Operations
 
-=item * $error = $kadm5->chpass_principal($krb5_princ, $password)
+=item * $success = $kadm5->chpass_principal($krb5_princ, $password)
 
 Change the password of $krb5_princ to $password.
 
-=item * $error = $kadm5->create_principal($kadm5_princ[, $password])
+=item * $success = $kadm5->create_principal($kadm5_princ[, $password])
 
 Insert $kadm5_princ into the database, optionally setting its password
 to the string in $password.  Clears KADM5_POLICY_CLR and
 KADM5_FAIL_AUTH_COUNT.
 
-=item * $error = $kadm5->delete_principal($krb5_princ)
+=item * $success = $kadm5->delete_principal($krb5_princ)
 
 Delete the principal represented by $krb5_princ from the database.
 
@@ -456,7 +589,7 @@ retrieve all of the useful attributes.
 Retrieve a list of principal names matching the glob pattern $expr.
 In the absence of $expr, retrieve the list of all principal names.
 
-=item * $error = $kadm5->modify_principal($kadm5_princ)
+=item * $success = $kadm5->modify_principal($kadm5_princ)
 
 Modify $kadm5_princ in the database.  The principal to modify is
 determined by C<$kadm5_princ-E<gt>principal>, and the rest of the writable
@@ -468,13 +601,17 @@ Randomize the principal in the database represented by $krb5_princ and
 return the new B<Authen::Krb5::Admin::Keyblock> objects, which have no
 useful methods yet.
 
+=item * $success = $kadm5->rename_principal($krb5_princ_from, $krb5_princ_to)
+
+Change the name of the principal from $krb5_princ_from to $krb5_princ_to.
+
 =item Policy Operations
 
-=item * $error = $kadm5->create_policy($kadm5_pol)
+=item * $success = $kadm5->create_policy($kadm5_pol)
 
 Insert $kadm5_pol into the database.
 
-=item * $error = $kadm5->delete_policy($name)
+=item * $success = $kadm5->delete_policy($name)
 
 Delete the policy named $name from the database.
 
@@ -488,7 +625,7 @@ named $name from the database.
 Retrieve a list of policy names matching the glob pattern $expr.  In
 the absence of $expr, retrieve the list of all policy names.
 
-=item * $error = $kadm5->modify_policy($kadm5_pol)
+=item * $success = $kadm5->modify_policy($kadm5_pol)
 
 Modify $kadm5_pol in the database.  The policy to modify is
 determined by C<$kadm5_pol->name>,(and the rest of the writable)

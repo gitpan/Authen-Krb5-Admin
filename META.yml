@@ -1,0 +1,10 @@
+#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
+name:         Authen-Krb5-Admin
+version:      0.05
+version_from: Admin.pm
+installdirs:  site
+requires:
+    Authen::Krb5:                  1.2
+
+distribution_type: module
+generated_by: ExtUtils::MakeMaker version 6.12

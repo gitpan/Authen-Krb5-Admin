@@ -1,5 +1,29 @@
 /*
- * $Id: Admin.xs,v 1.10 2002/09/18 12:56:59 ajk Exp $
+ * Copyright (c) 2002 Andrew J. Korty
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions
+ * are met:
+ * 1. Redistributions of source code must retain the above copyright
+ *    notice, this list of conditions and the following disclaimer.
+ * 2. Redistributions in binary form must reproduce the above copyright
+ *    notice, this list of conditions and the following disclaimer in the
+ *    documentation and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+ * ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+ * FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+ * DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+ * OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+ * HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+ * LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+ * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+ * SUCH DAMAGE.
+ *
+ * $Id: Admin.xs,v 1.18 2003/02/05 17:48:03 ajk Exp $
  */
 
 #include "EXTERN.h"
@@ -22,439 +46,860 @@ constant(char *name, int arg)
 {
 	errno = 0;
 	switch (*name) {
+	case 'E':
+		if (strEQ(name, "ENCTYPE_NULL"))
+#ifdef ENCTYPE_NULL
+			return ENCTYPE_NULL;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "ENCTYPE_DES_CBC_CRC"))
+#ifdef ENCTYPE_DES_CBC_CRC
+			return ENCTYPE_DES_CBC_CRC;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "ENCTYPE_DES_CBC_MD4"))
+#ifdef ENCTYPE_DES_CBC_MD4
+			return ENCTYPE_DES_CBC_MD4;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "ENCTYPE_DES_CBC_MD5"))
+#ifdef ENCTYPE_DES_CBC_MD5
+			return ENCTYPE_DES_CBC_MD5;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "ENCTYPE_DES_CBC_RAW"))
+#ifdef ENCTYPE_DES_CBC_RAW
+			return ENCTYPE_DES_CBC_RAW;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "ENCTYPE_DES_HMAC_SHA1"))
+#ifdef ENCTYPE_DES_HMAC_SHA1
+			return ENCTYPE_DES_HMAC_SHA1;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "ENCTYPE_DES3_CBC_RAW"))
+#ifdef ENCTYPE_DES3_CBC_RAW
+			return ENCTYPE_DES3_CBC_RAW;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "ENCTYPE_DES3_CBC_SHA"))
+#ifdef ENCTYPE_DES3_CBC_SHA
+			return ENCTYPE_DES3_CBC_SHA;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "ENCTYPE_DES3_CBC_SHA1"))
+#ifdef ENCTYPE_DES3_CBC_SHA1
+			return ENCTYPE_DES3_CBC_SHA1;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "ENCTYPE_LOCAL_DES3_HMAC_SHA1"))
+#ifdef ENCTYPE_LOCAL_DES3_HMAC_SHA1
+			return ENCTYPE_LOCAL_DES3_HMAC_SHA1;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "ENCTYPE_UNKNOWN"))
+#ifdef ENCTYPE_UNKNOWN
+			return ENCTYPE_UNKNOWN;
+#else
+			goto not_there;
+#endif
+		break;
 	case 'K':
-		if (strEQ(name, "KADM5_API_VERSION_2"))
-	if (strEQ(name, "KADM5_API_VERSION_1"))
+		if (strEQ(name, "KADM5_API_VERSION_1"))
 #ifdef KADM5_API_VERSION_1
-	    return KADM5_API_VERSION_1;
+			return KADM5_API_VERSION_1;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_API_VERSION_2"))
+		if (strEQ(name, "KADM5_API_VERSION_2"))
 #ifdef KADM5_API_VERSION_2
-	    return KADM5_API_VERSION_2;
+			return KADM5_API_VERSION_2;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_API_VERSION_MASK"))
+		if (strEQ(name, "KADM5_API_VERSION_MASK"))
 #ifdef KADM5_API_VERSION_MASK
-	    return KADM5_API_VERSION_MASK;
+			return KADM5_API_VERSION_MASK;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_ATTRIBUTES"))
+		if (strEQ(name, "KADM5_ATTRIBUTES"))
 #ifdef KADM5_ATTRIBUTES
-	    return KADM5_ATTRIBUTES;
+			return KADM5_ATTRIBUTES;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_AUX_ATTRIBUTES"))
+		if (strEQ(name, "KADM5_AUTH_ADD"))
+#ifdef KADM5_AUTH_ADD
+			return KADM5_AUTH_ADD;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_AUTH_CHANGEPW"))
+#ifdef KADM5_AUTH_CHANGEPW
+			return KADM5_AUTH_CHANGEPW;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_AUTH_DELETE"))
+#ifdef KADM5_AUTH_DELETE
+			return KADM5_AUTH_DELETE;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_AUTH_GET"))
+#ifdef KADM5_AUTH_GET
+			return KADM5_AUTH_GET;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_AUTH_INSUFFICIENT"))
+#ifdef KADM5_AUTH_INSUFFICIENT
+			return KADM5_AUTH_INSUFFICIENT;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_AUTH_LIST"))
+#ifdef KADM5_AUTH_LIST
+			return KADM5_AUTH_LIST;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_AUTH_MODIFY"))
+#ifdef KADM5_AUTH_MODIFY
+			return KADM5_AUTH_MODIFY;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_AUTH_SETKEY"))
+#ifdef KADM5_AUTH_SETKEY
+			return KADM5_AUTH_SETKEY;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_AUX_ATTRIBUTES"))
 #ifdef KADM5_AUX_ATTRIBUTES
-	    return KADM5_AUX_ATTRIBUTES;
+			return KADM5_AUX_ATTRIBUTES;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_ACL_FILE"))
+		if (strEQ(name, "KADM5_BAD_API_VERSION"))
+#ifdef KADM5_BAD_API_VERSION
+			return KADM5_BAD_API_VERSION;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_AUX_ATTR"))
+#ifdef KADM5_BAD_AUX_ATTR
+			return KADM5_BAD_AUX_ATTR;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_CLASS"))
+#ifdef KADM5_BAD_CLASS
+			return KADM5_BAD_CLASS;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_CLIENT_PARAMS"))
+#ifdef KADM5_BAD_CLIENT_PARAMS
+			return KADM5_BAD_CLIENT_PARAMS;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_DB"))
+#ifdef KADM5_BAD_DB
+			return KADM5_BAD_DB;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_HISTORY"))
+#ifdef KADM5_BAD_HISTORY
+			return KADM5_BAD_HISTORY;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_HIST_KEY"))
+#ifdef KADM5_BAD_HIST_KEY
+			return KADM5_BAD_HIST_KEY;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_LENGTH"))
+#ifdef KADM5_BAD_LENGTH
+			return KADM5_BAD_LENGTH;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_MASK"))
+#ifdef KADM5_BAD_MASK
+			return KADM5_BAD_MASK;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_MIN_PASS_LIFE"))
+#ifdef KADM5_BAD_MIN_PASS_LIFE
+			return KADM5_BAD_MIN_PASS_LIFE;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_PASSWORD"))
+#ifdef KADM5_BAD_PASSWORD
+			return KADM5_BAD_PASSWORD;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_POLICY"))
+#ifdef KADM5_BAD_POLICY
+			return KADM5_BAD_POLICY;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_PRINCIPAL"))
+#ifdef KADM5_BAD_PRINCIPAL
+			return KADM5_BAD_PRINCIPAL;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_SERVER_HANDLE"))
+#ifdef KADM5_BAD_SERVER_HANDLE
+			return KADM5_BAD_SERVER_HANDLE;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_SERVER_NAME"))
+#ifdef KADM5_BAD_SERVER_NAME
+			return KADM5_BAD_SERVER_NAME;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_SERVER_PARAMS"))
+#ifdef KADM5_BAD_SERVER_PARAMS
+			return KADM5_BAD_SERVER_PARAMS;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_STRUCT_VERSION"))
+#ifdef KADM5_BAD_STRUCT_VERSION
+			return KADM5_BAD_STRUCT_VERSION;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_BAD_TL_TYPE"))
+#ifdef KADM5_BAD_TL_TYPE
+			return KADM5_BAD_TL_TYPE;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_CONFIG_ACL_FILE"))
 #ifdef KADM5_CONFIG_ACL_FILE
-	    return KADM5_CONFIG_ACL_FILE;
+			return KADM5_CONFIG_ACL_FILE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_ADBNAME"))
+		if (strEQ(name, "KADM5_CONFIG_ADBNAME"))
 #ifdef KADM5_CONFIG_ADBNAME
-	    return KADM5_CONFIG_ADBNAME;
+			return KADM5_CONFIG_ADBNAME;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_ADB_LOCKFILE"))
+		if (strEQ(name, "KADM5_CONFIG_ADB_LOCKFILE"))
 #ifdef KADM5_CONFIG_ADB_LOCKFILE
-	    return KADM5_CONFIG_ADB_LOCKFILE;
+			return KADM5_CONFIG_ADB_LOCKFILE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_ADMIN_KEYTAB"))
+		if (strEQ(name, "KADM5_CONFIG_ADMIN_KEYTAB"))
 #ifdef KADM5_CONFIG_ADMIN_KEYTAB
-	    return KADM5_CONFIG_ADMIN_KEYTAB;
+			return KADM5_CONFIG_ADMIN_KEYTAB;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_ADMIN_SERVER"))
+		if (strEQ(name, "KADM5_CONFIG_ADMIN_SERVER"))
 #ifdef KADM5_CONFIG_ADMIN_SERVER
-	    return KADM5_CONFIG_ADMIN_SERVER;
+			return KADM5_CONFIG_ADMIN_SERVER;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_DBNAME"))
+		if (strEQ(name, "KADM5_CONFIG_DBNAME"))
 #ifdef KADM5_CONFIG_DBNAME
-	    return KADM5_CONFIG_DBNAME;
+			return KADM5_CONFIG_DBNAME;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_DICT_FILE"))
+		if (strEQ(name, "KADM5_CONFIG_DICT_FILE"))
 #ifdef KADM5_CONFIG_DICT_FILE
-	    return KADM5_CONFIG_DICT_FILE;
+			return KADM5_CONFIG_DICT_FILE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_ENCTYPE"))
+		if (strEQ(name, "KADM5_CONFIG_ENCTYPE"))
 #ifdef KADM5_CONFIG_ENCTYPE
-	    return KADM5_CONFIG_ENCTYPE;
+			return KADM5_CONFIG_ENCTYPE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_ENCTYPES"))
+		if (strEQ(name, "KADM5_CONFIG_ENCTYPES"))
 #ifdef KADM5_CONFIG_ENCTYPES
-	    return KADM5_CONFIG_ENCTYPES;
+			return KADM5_CONFIG_ENCTYPES;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_EXPIRATION"))
+		if (strEQ(name, "KADM5_CONFIG_EXPIRATION"))
 #ifdef KADM5_CONFIG_EXPIRATION
-	    return KADM5_CONFIG_EXPIRATION;
+			return KADM5_CONFIG_EXPIRATION;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_FLAGS"))
+		if (strEQ(name, "KADM5_CONFIG_FLAGS"))
 #ifdef KADM5_CONFIG_FLAGS
-	    return KADM5_CONFIG_FLAGS;
+			return KADM5_CONFIG_FLAGS;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_KADMIND_PORT"))
+		if (strEQ(name, "KADM5_CONFIG_KADMIND_PORT"))
 #ifdef KADM5_CONFIG_KADMIND_PORT
-	    return KADM5_CONFIG_KADMIND_PORT;
+			return KADM5_CONFIG_KADMIND_PORT;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_KPASSWD_PORT"))
+		if (strEQ(name, "KADM5_CONFIG_KPASSWD_PORT"))
 #ifdef KADM5_CONFIG_KPASSWD_PORT
-	    return KADM5_CONFIG_KPASSWD_PORT;
+			return KADM5_CONFIG_KPASSWD_PORT;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_MAX_LIFE"))
+		if (strEQ(name, "KADM5_CONFIG_MAX_LIFE"))
 #ifdef KADM5_CONFIG_MAX_LIFE
-	    return KADM5_CONFIG_MAX_LIFE;
+			return KADM5_CONFIG_MAX_LIFE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_MAX_RLIFE"))
+		if (strEQ(name, "KADM5_CONFIG_MAX_RLIFE"))
 #ifdef KADM5_CONFIG_MAX_RLIFE
-	    return KADM5_CONFIG_MAX_RLIFE;
+			return KADM5_CONFIG_MAX_RLIFE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_MKEY_FROM_KBD"))
+		if (strEQ(name, "KADM5_CONFIG_MKEY_FROM_KBD"))
 #ifdef KADM5_CONFIG_MKEY_FROM_KBD
-	    return KADM5_CONFIG_MKEY_FROM_KBD;
+			return KADM5_CONFIG_MKEY_FROM_KBD;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_MKEY_NAME"))
+		if (strEQ(name, "KADM5_CONFIG_MKEY_NAME"))
 #ifdef KADM5_CONFIG_MKEY_NAME
-	    return KADM5_CONFIG_MKEY_NAME;
+			return KADM5_CONFIG_MKEY_NAME;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_PROFILE"))
+		if (strEQ(name, "KADM5_CONFIG_PROFILE"))
 #ifdef KADM5_CONFIG_PROFILE
-	    return KADM5_CONFIG_PROFILE;
+			return KADM5_CONFIG_PROFILE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_REALM"))
+		if (strEQ(name, "KADM5_CONFIG_REALM"))
 #ifdef KADM5_CONFIG_REALM
-	    return KADM5_CONFIG_REALM;
+			return KADM5_CONFIG_REALM;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_CONFIG_STASH_FILE"))
+		if (strEQ(name, "KADM5_CONFIG_STASH_FILE"))
 #ifdef KADM5_CONFIG_STASH_FILE
-	    return KADM5_CONFIG_STASH_FILE;
+			return KADM5_CONFIG_STASH_FILE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_FAIL_AUTH_COUNT"))
+		if (strEQ(name, "KADM5_DUP"))
+#ifdef KADM5_DUP
+			return KADM5_DUP;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_FAILURE"))
+#ifdef KADM5_FAILURE
+			return KADM5_FAILURE;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_FAIL_AUTH_COUNT"))
 #ifdef KADM5_FAIL_AUTH_COUNT
-	    return KADM5_FAIL_AUTH_COUNT;
+			return KADM5_FAIL_AUTH_COUNT;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_KEY_DATA"))
+		if (strEQ(name, "KADM5_GSS_ERROR"))
+#ifdef KADM5_GSS_ERROR
+			return KADM5_GSS_ERROR;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_INIT"))
+#ifdef KADM5_INIT
+			return KADM5_INIT;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_KEY_DATA"))
 #ifdef KADM5_KEY_DATA
-	    return KADM5_KEY_DATA;
+			return KADM5_KEY_DATA;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_KVNO"))
+		if (strEQ(name, "KADM5_KVNO"))
 #ifdef KADM5_KVNO
-	    return KADM5_KVNO;
+			return KADM5_KVNO;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_LAST_FAILED"))
+		if (strEQ(name, "KADM5_LAST_FAILED"))
 #ifdef KADM5_LAST_FAILED
-	    return KADM5_LAST_FAILED;
+			return KADM5_LAST_FAILED;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_LAST_PWD_CHANGE"))
+		if (strEQ(name, "KADM5_LAST_PWD_CHANGE"))
 #ifdef KADM5_LAST_PWD_CHANGE
-	    return KADM5_LAST_PWD_CHANGE;
+			return KADM5_LAST_PWD_CHANGE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_LAST_SUCCESS"))
+		if (strEQ(name, "KADM5_LAST_SUCCESS"))
 #ifdef KADM5_LAST_SUCCESS
-	    return KADM5_LAST_SUCCESS;
+			return KADM5_LAST_SUCCESS;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_MASK_BITS"))
+		if (strEQ(name, "KADM5_MASK_BITS"))
 #ifdef KADM5_MASK_BITS
-	    return KADM5_MASK_BITS;
+			return KADM5_MASK_BITS;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_MAX_LIFE"))
+		if (strEQ(name, "KADM5_MAX_LIFE"))
 #ifdef KADM5_MAX_LIFE
-	    return KADM5_MAX_LIFE;
+			return KADM5_MAX_LIFE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_MAX_RLIFE"))
+		if (strEQ(name, "KADM5_MAX_RLIFE"))
 #ifdef KADM5_MAX_RLIFE
-	    return KADM5_MAX_RLIFE;
+			return KADM5_MAX_RLIFE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_MKVNO"))
+		if (strEQ(name, "KADM5_MISSING_CONF_PARAMS"))
+#ifdef KADM5_MISSING_CONF_PARAMS
+			return KADM5_MISSING_CONF_PARAMS;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_MKVNO"))
 #ifdef KADM5_MKVNO
-	    return KADM5_MKVNO;
+			return KADM5_MKVNO;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_MOD_NAME"))
+		if (strEQ(name, "KADM5_MOD_NAME"))
 #ifdef KADM5_MOD_NAME
-	    return KADM5_MOD_NAME;
+			return KADM5_MOD_NAME;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_MOD_TIME"))
+		if (strEQ(name, "KADM5_MOD_TIME"))
 #ifdef KADM5_MOD_TIME
-	    return KADM5_MOD_TIME;
+			return KADM5_MOD_TIME;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_OK"))
+		if (strEQ(name, "KADM5_NEW_LIB_API_VERSION"))
+#ifdef KADM5_NEW_LIB_API_VERSION
+			return KADM5_NEW_LIB_API_VERSION;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_NEW_SERVER_API_VERSION"))
+#ifdef KADM5_NEW_SERVER_API_VERSION
+			return KADM5_NEW_SERVER_API_VERSION;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_NEW_STRUCT_VERSION"))
+#ifdef KADM5_NEW_STRUCT_VERSION
+			return KADM5_NEW_STRUCT_VERSION;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_NOT_INIT"))
+#ifdef KADM5_NOT_INIT
+			return KADM5_NOT_INIT;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_NO_RENAME_SALT"))
+#ifdef KADM5_NO_RENAME_SALT
+			return KADM5_NO_RENAME_SALT;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_NO_SRV"))
+#ifdef KADM5_NO_SRV
+			return KADM5_NO_SRV;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_OK"))
 #ifdef KADM5_OK
-	    return KADM5_OK;
+			return KADM5_OK;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_POLICY"))
+		if (strEQ(name, "KADM5_OLD_LIB_API_VERSION"))
+#ifdef KADM5_OLD_LIB_API_VERSION
+			return KADM5_OLD_LIB_API_VERSION;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_OLD_SERVER_API_VERSION"))
+#ifdef KADM5_OLD_SERVER_API_VERSION
+			return KADM5_OLD_SERVER_API_VERSION;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_OLD_STRUCT_VERSION"))
+#ifdef KADM5_OLD_STRUCT_VERSION
+			return KADM5_OLD_STRUCT_VERSION;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_PASS_Q_CLASS"))
+#ifdef KADM5_PASS_Q_CLASS
+			return KADM5_PASS_Q_CLASS;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_PASS_Q_DICT"))
+#ifdef KADM5_PASS_Q_DICT
+			return KADM5_PASS_Q_DICT;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_PASS_Q_TOOSHORT"))
+#ifdef KADM5_PASS_Q_TOOSHORT
+			return KADM5_PASS_Q_TOOSHORT;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_PASS_REUSE"))
+#ifdef KADM5_PASS_REUSE
+			return KADM5_PASS_REUSE;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_PASS_TOOSOON"))
+#ifdef KADM5_PASS_TOOSOON
+			return KADM5_PASS_TOOSOON;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_POLICY"))
 #ifdef KADM5_POLICY
-	    return KADM5_POLICY;
+			return KADM5_POLICY;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_POLICY_CLR"))
+		if (strEQ(name, "KADM5_POLICY_CLR"))
 #ifdef KADM5_POLICY_CLR
-	    return KADM5_POLICY_CLR;
+			return KADM5_POLICY_CLR;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PRINCIPAL"))
+		if (strEQ(name, "KADM5_POLICY_REF"))
+#ifdef KADM5_POLICY_REF
+			return KADM5_POLICY_REF;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_PRINCIPAL"))
 #ifdef KADM5_PRINCIPAL
-	    return KADM5_PRINCIPAL;
+			return KADM5_PRINCIPAL;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PRINCIPAL_NORMAL_MASK"))
+		if (strEQ(name, "KADM5_PRINCIPAL_NORMAL_MASK"))
 #ifdef KADM5_PRINCIPAL_NORMAL_MASK
-	    return KADM5_PRINCIPAL_NORMAL_MASK;
+			return KADM5_PRINCIPAL_NORMAL_MASK;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PRINC_EXPIRE_TIME"))
+		if (strEQ(name, "KADM5_PRINC_EXPIRE_TIME"))
 #ifdef KADM5_PRINC_EXPIRE_TIME
-	    return KADM5_PRINC_EXPIRE_TIME;
+			return KADM5_PRINC_EXPIRE_TIME;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PRIV_ADD"))
+		if (strEQ(name, "KADM5_PRIV_ADD"))
 #ifdef KADM5_PRIV_ADD
-	    return KADM5_PRIV_ADD;
+			return KADM5_PRIV_ADD;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PRIV_DELETE"))
+		if (strEQ(name, "KADM5_PRIV_DELETE"))
 #ifdef KADM5_PRIV_DELETE
-	    return KADM5_PRIV_DELETE;
+			return KADM5_PRIV_DELETE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PRIV_GET"))
+		if (strEQ(name, "KADM5_PRIV_GET"))
 #ifdef KADM5_PRIV_GET
-	    return KADM5_PRIV_GET;
+			return KADM5_PRIV_GET;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PRIV_MODIFY"))
+		if (strEQ(name, "KADM5_PRIV_MODIFY"))
 #ifdef KADM5_PRIV_MODIFY
-	    return KADM5_PRIV_MODIFY;
+			return KADM5_PRIV_MODIFY;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PW_EXPIRATION"))
+		if (strEQ(name, "KADM5_PROTECT_PRINCIPAL"))
+#ifdef KADM5_PROTECT_PRINCIPAL
+			return KADM5_PROTECT_PRINCIPAL;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_PW_EXPIRATION"))
 #ifdef KADM5_PW_EXPIRATION
-	    return KADM5_PW_EXPIRATION;
+			return KADM5_PW_EXPIRATION;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PW_HISTORY_NUM"))
+		if (strEQ(name, "KADM5_PW_HISTORY_NUM"))
 #ifdef KADM5_PW_HISTORY_NUM
-	    return KADM5_PW_HISTORY_NUM;
+			return KADM5_PW_HISTORY_NUM;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PW_MAX_LIFE"))
+		if (strEQ(name, "KADM5_PW_MAX_LIFE"))
 #ifdef KADM5_PW_MAX_LIFE
-	    return KADM5_PW_MAX_LIFE;
+			return KADM5_PW_MAX_LIFE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PW_MIN_CLASSES"))
+		if (strEQ(name, "KADM5_PW_MIN_CLASSES"))
 #ifdef KADM5_PW_MIN_CLASSES
-	    return KADM5_PW_MIN_CLASSES;
+			return KADM5_PW_MIN_CLASSES;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PW_MIN_LENGTH"))
+		if (strEQ(name, "KADM5_PW_MIN_LENGTH"))
 #ifdef KADM5_PW_MIN_LENGTH
-	    return KADM5_PW_MIN_LENGTH;
+			return KADM5_PW_MIN_LENGTH;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_PW_MIN_LIFE"))
+		if (strEQ(name, "KADM5_PW_MIN_LIFE"))
 #ifdef KADM5_PW_MIN_LIFE
-	    return KADM5_PW_MIN_LIFE;
+			return KADM5_PW_MIN_LIFE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_REF_COUNT"))
+		if (strEQ(name, "KADM5_REF_COUNT"))
 #ifdef KADM5_REF_COUNT
-	    return KADM5_REF_COUNT;
+			return KADM5_REF_COUNT;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_STRUCT_VERSION"))
+		if (strEQ(name, "KADM5_RPC_ERROR"))
+#ifdef KADM5_RPC_ERROR
+			return KADM5_RPC_ERROR;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_SECURE_PRINC_MISSING"))
+#ifdef KADM5_SECURE_PRINC_MISSING
+			return KADM5_SECURE_PRINC_MISSING;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_SETKEY3_ETYPE_MISMATCH"))
+#ifdef KADM5_SETKEY3_ETYPE_MISMATCH
+			return KADM5_SETKEY3_ETYPE_MISMATCH;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_SETKEY_DUP_ENCTYPES"))
+#ifdef KADM5_SETKEY_DUP_ENCTYPES
+			return KADM5_SETKEY_DUP_ENCTYPES;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_SETV4KEY_INVAL_ENCTYPE"))
+#ifdef KADM5_SETV4KEY_INVAL_ENCTYPE
+			return KADM5_SETV4KEY_INVAL_ENCTYPE;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_STRUCT_VERSION"))
 #ifdef KADM5_STRUCT_VERSION
-	    return KADM5_STRUCT_VERSION;
+			return KADM5_STRUCT_VERSION;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_STRUCT_VERSION_1"))
+		if (strEQ(name, "KADM5_STRUCT_VERSION_1"))
 #ifdef KADM5_STRUCT_VERSION_1
-	    return KADM5_STRUCT_VERSION_1;
+			return KADM5_STRUCT_VERSION_1;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_STRUCT_VERSION_MASK"))
+		if (strEQ(name, "KADM5_STRUCT_VERSION_MASK"))
 #ifdef KADM5_STRUCT_VERSION_MASK
-	    return KADM5_STRUCT_VERSION_MASK;
+			return KADM5_STRUCT_VERSION_MASK;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KADM5_TL_DATA"))
+		if (strEQ(name, "KADM5_TL_DATA"))
 #ifdef KADM5_TL_DATA
-	    return KADM5_TL_DATA;
+			return KADM5_TL_DATA;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_DISALLOW_ALL_TIX"))
+		if (strEQ(name, "KADM5_UNK_POLICY"))
+#ifdef KADM5_UNK_POLICY
+			return KADM5_UNK_POLICY;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_UNK_PRINC"))
+#ifdef KADM5_UNK_PRINC
+			return KADM5_UNK_PRINC;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KRB5_KDB_DISALLOW_ALL_TIX"))
 #ifdef KRB5_KDB_DISALLOW_ALL_TIX
-	    return KRB5_KDB_DISALLOW_ALL_TIX;
+			return KRB5_KDB_DISALLOW_ALL_TIX;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_DISALLOW_DUP_SKEY"))
+		if (strEQ(name, "KRB5_KDB_DISALLOW_DUP_SKEY"))
 #ifdef KRB5_KDB_DISALLOW_DUP_SKEY
-	    return KRB5_KDB_DISALLOW_DUP_SKEY;
+			return KRB5_KDB_DISALLOW_DUP_SKEY;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_DISALLOW_FORWARDABLE"))
+		if (strEQ(name, "KRB5_KDB_DISALLOW_FORWARDABLE"))
 #ifdef KRB5_KDB_DISALLOW_FORWARDABLE
-	    return KRB5_KDB_DISALLOW_FORWARDABLE;
+			return KRB5_KDB_DISALLOW_FORWARDABLE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_DISALLOW_POSTDATED"))
+		if (strEQ(name, "KRB5_KDB_DISALLOW_POSTDATED"))
 #ifdef KRB5_KDB_DISALLOW_POSTDATED
-	    return KRB5_KDB_DISALLOW_POSTDATED;
+			return KRB5_KDB_DISALLOW_POSTDATED;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_DISALLOW_PROXIABLE"))
+		if (strEQ(name, "KRB5_KDB_DISALLOW_PROXIABLE"))
 #ifdef KRB5_KDB_DISALLOW_PROXIABLE
-	    return KRB5_KDB_DISALLOW_PROXIABLE;
+			return KRB5_KDB_DISALLOW_PROXIABLE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_DISALLOW_RENEWABLE"))
+		if (strEQ(name, "KRB5_KDB_DISALLOW_RENEWABLE"))
 #ifdef KRB5_KDB_DISALLOW_RENEWABLE
-	    return KRB5_KDB_DISALLOW_RENEWABLE;
+			return KRB5_KDB_DISALLOW_RENEWABLE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_DISALLOW_SVR"))
+		if (strEQ(name, "KRB5_KDB_DISALLOW_SVR"))
 #ifdef KRB5_KDB_DISALLOW_SVR
-	    return KRB5_KDB_DISALLOW_SVR;
+			return KRB5_KDB_DISALLOW_SVR;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_DISALLOW_TGT_BASED"))
+		if (strEQ(name, "KRB5_KDB_DISALLOW_TGT_BASED"))
 #ifdef KRB5_KDB_DISALLOW_TGT_BASED
-	    return KRB5_KDB_DISALLOW_TGT_BASED;
+			return KRB5_KDB_DISALLOW_TGT_BASED;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_NEW_PRINC"))
+		if (strEQ(name, "KRB5_KDB_NEW_PRINC"))
 #ifdef KRB5_KDB_NEW_PRINC
-	    return KRB5_KDB_NEW_PRINC;
+			return KRB5_KDB_NEW_PRINC;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_PWCHANGE_SERVICE"))
-#ifdef KRB5_KDB_PWCHANGE_SERVICE
-	    return KRB5_KDB_PWCHANGE_SERVICE;
-#else
-	    goto not_there;
-#endif
-	if (strEQ(name, "KRB5_KDB_REQUIRES_HW_AUTH"))
+		if (strEQ(name, "KRB5_KDB_REQUIRES_HW_AUTH"))
 #ifdef KRB5_KDB_REQUIRES_HW_AUTH
-	    return KRB5_KDB_REQUIRES_HW_AUTH;
+			return KRB5_KDB_REQUIRES_HW_AUTH;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_REQUIRES_PRE_AUTH"))
+		if (strEQ(name, "KRB5_KDB_REQUIRES_PRE_AUTH"))
 #ifdef KRB5_KDB_REQUIRES_PRE_AUTH
-	    return KRB5_KDB_REQUIRES_PRE_AUTH;
+			return KRB5_KDB_REQUIRES_PRE_AUTH;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_REQUIRES_PWCHANGE"))
+		if (strEQ(name, "KRB5_KDB_REQUIRES_PWCHANGE"))
 #ifdef KRB5_KDB_REQUIRES_PWCHANGE
-	    return KRB5_KDB_REQUIRES_PWCHANGE;
+			return KRB5_KDB_REQUIRES_PWCHANGE;
 #else
-	    goto not_there;
+			goto not_there;
 #endif
-	if (strEQ(name, "KRB5_KDB_SUPPORT_DESMD5"))
-#ifdef KRB5_KDB_SUPPORT_DESMD5
-	    return KRB5_KDB_SUPPORT_DESMD5;
+		if (strEQ(name, "KRB5_KDB_SALTTYPE_AFS3"))
+#ifdef KRB5_KDB_SALTTYPE_AFS3
+			return KRB5_KDB_SALTTYPE_AFS3;
 #else
-	    goto not_there;
+			goto not_there;
+#endif
+		if (strEQ(name, "KRB5_KDB_SALTTYPE_NOREALM"))
+#ifdef KRB5_KDB_SALTTYPE_NOREALM
+			return KRB5_KDB_SALTTYPE_NOREALM;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KRB5_KDB_SALTTYPE_NORMAL"))
+#ifdef KRB5_KDB_SALTTYPE_NORMAL
+			return KRB5_KDB_SALTTYPE_NORMAL;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KRB5_KDB_SALTTYPE_ONLYREALM"))
+#ifdef KRB5_KDB_SALTTYPE_ONLYREALM
+			return KRB5_KDB_SALTTYPE_ONLYREALM;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KRB5_KDB_SALTTYPE_SPECIAL"))
+#ifdef KRB5_KDB_SALTTYPE_SPECIAL
+			return KRB5_KDB_SALTTYPE_SPECIAL;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KRB5_KDB_SALTTYPE_V4"))
+#ifdef KRB5_KDB_SALTTYPE_V4
+			return KRB5_KDB_SALTTYPE_V4;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KRB5_KDB_SUPPORT_DESMD5"))
+#ifdef KRB5_KDB_SUPPORT_DESMD5
+			return KRB5_KDB_SUPPORT_DESMD5;
+#else
+			goto not_there;
 #endif
 		break;
 	}
@@ -468,25 +913,56 @@ constant(char *name, int arg)
 
 static kadm5_ret_t err;
 
+/*
+ * Some Kerberos data objects contain others, so we don't always want
+ * to free an object when the Perl program is done with it.  For
+ * example, kadm5_principal_ent_rec contains a couple of
+ * krb5_principals, but we don't necessarily want those them freed
+ * when the SVs referring to them go out of scope because we still
+ * have the kadm5_principal_ent_rec pointing to them.
+ *
+ * Authen::Krb5 solves this by remembering every independently created
+ * object so that no contained objects are freed.  Unfortunately, this
+ * approach causes all child objects to become invalid once the parent
+ * is destroyed.  So instead, create meta-structures containing, in
+ * addition to the Kerberos data itself, pointers to SVs to which we
+ * return references.  We account for the parent's dependency on the
+ * child in the reference count of the SV.  When it's time to destroy
+ * a parent object, we decrease the reference counts, and we don't use
+ * the Kerberos free functions.
+ *
+ * The policy and principal methods keep track of the mask in the
+ * meta-struct so the user doesn't have to.  They assume that if the
+ * user set the value, it should be changed.
+ */
+
 struct kadm5_policy_mit {
-       kadm5_policy_ent_rec	policy;
-       long			mask;
+	kadm5_policy_ent_rec	policy;
+	long			mask;
 };
 
 struct kadm5_principal_mit {
-       kadm5_principal_ent_rec	 kadm5_princ;
-       SV			*krb5_princ;
-       SV			*krb5_princ_mod;
-       long			 mask;
+	kadm5_principal_ent_rec		kadm5_princ;
+	SV			      **key_data;
+	SV			       *krb5_princ;
+	SV			       *krb5_princ_mod;
+	long				mask;
 };
 
 typedef kadm5_config_params		*Authen__Krb5__Admin__Config;
 typedef krb5_ccache			 Authen__Krb5__Ccache;
+typedef krb5_key_data			*Authen__Krb5__Admin__Key;
 typedef krb5_keyblock			*Authen__Krb5__Admin__Keyblock;
 typedef krb5_principal			 Authen__Krb5__Principal;
 typedef struct kadm5_policy_mit		*Authen__Krb5__Admin__Policy;
 typedef struct kadm5_principal_mit	*Authen__Krb5__Admin__Principal;
 typedef void				*Authen__Krb5__Admin;
+
+/*
+ * The Authen::Krb5::Admin object is just the void * returned by the
+ * init functions, init_with_{creds,password,skey}, which are this
+ * packages constructors.
+ */
 
 MODULE = Authen::Krb5::Admin	PACKAGE = Authen::Krb5::Admin	PREFIX = kadm5_
 
@@ -596,12 +1072,24 @@ kadm5_get_principal(handle, krb5_princ, mask = KADM5_PRINCIPAL_NORMAL_MASK)
 	Authen::Krb5::Admin	handle
 	Authen::Krb5::Principal	krb5_princ
 	long			mask
+    PREINIT:
+	int i;
     CODE:
 	Newz(0, RETVAL, 1, struct kadm5_principal_mit);	
 	err = kadm5_get_principal(handle, krb5_princ, &RETVAL->kadm5_princ,
 	    mask);
 	if (err)
 		XSRETURN_UNDEF;
+	if (RETVAL->kadm5_princ.n_key_data) {
+		New(0, RETVAL->key_data, RETVAL->kadm5_princ.n_key_data, SV *);
+		for (i = 0; i < RETVAL->kadm5_princ.n_key_data; i++) {
+			krb5_key_data *p;
+			New(0, p, 1, krb5_key_data);
+			Copy(&RETVAL->kadm5_princ.key_data[i], p, 1,
+			    krb5_key_data);
+			RETVAL->key_data[i] = newSViv((IV) p);
+		}
+	}
 	RETVAL->krb5_princ = newSViv((IV) RETVAL->kadm5_princ.principal);
 	RETVAL->krb5_princ_mod =
 	    newSViv((IV) RETVAL->kadm5_princ.mod_name);
@@ -728,6 +1216,17 @@ kadm5_randkey_principal(handle, princ)
 	XSRETURN(count);
 
 void
+kadm5_rename_principal(handle, source, target)
+	Authen::Krb5::Admin	handle
+	Authen::Krb5::Principal	source
+	Authen::Krb5::Principal	target
+    CODE:
+	err = kadm5_rename_principal(handle, source, target);
+	if (err)
+		XSRETURN_UNDEF;
+	XSRETURN_YES;
+
+void
 DESTROY(handle)
 	Authen::Krb5::Admin	handle
     CODE:
@@ -735,6 +1234,10 @@ DESTROY(handle)
 	if (err)	
 		XSRETURN_UNDEF;
 	XSRETURN_YES;
+
+ # 
+ # kadm5_config_params class
+ # 
 
 MODULE = Authen::Krb5::Admin	PACKAGE = Authen::Krb5::Admin::Config
 
@@ -853,7 +1356,134 @@ void
 DESTROY(config)
 	Authen::Krb5::Admin::Config	config
     CODE:
+	if (config) {
+		if (config->profile)
+			Safefree(config->profile);
+		if (config->dbname)
+			Safefree(config->dbname);
+		if (config->mkey_name)
+			Safefree(config->mkey_name);
+		if (config->stash_file)
+			Safefree(config->stash_file);
+		if (config->keysalts)
+			Safefree(config->keysalts);
+		if (config->admin_server)
+			Safefree(config->admin_server);
+		if (config->admin_keytab)
+			Safefree(config->admin_keytab);
+		if (config->dict_file)
+			Safefree(config->dict_file);
+		if (config->acl_file)
+			Safefree(config->acl_file);
+		if (config->realm)
+			Safefree(config->realm);
+		if (config->admin_dbname)
+			Safefree(config->admin_dbname);
+		if (config->admin_lockfile)
+			Safefree(config->admin_lockfile);
+	}
 	Safefree(config);
+
+ # 
+ # krb5_key_data class--for key data returned by get_principal
+ # 
+
+MODULE = Authen::Krb5::Admin	PACKAGE = Authen::Krb5::Admin::Key
+
+Authen::Krb5::Admin::Key
+new(CLASS)
+	char	*CLASS
+    CODE:
+	Newz(0, RETVAL, 1, krb5_key_data);
+    OUTPUT:
+	RETVAL
+
+krb5_octet *
+_contents(key, ...)
+	Authen::Krb5::Admin::Key	key
+    ALIAS:
+	key_contents = 0
+	salt_contents = 1
+    PROTOTYPE: $;$
+    CODE:
+	if (key->key_data_ver > ix) {
+		if (items > 1) {
+			if (key->key_data_contents[ix]) {
+				memset(key->key_data_contents[ix], 0,
+				    key->key_data_length[ix]);
+				Safefree(key->key_data_contents[ix]);
+			}
+			New(0, key->key_data_contents[ix],
+			    key->key_data_length[ix], krb5_octet);
+			Copy(SvIV(ST(1)), key->key_data_contents[ix],
+			    key->key_data_length[ix], krb5_octet);
+		}
+		ST(0) = key->key_data_contents[ix]
+		    ? sv_2mortal(newSVpv(key->key_data_contents[ix],
+		    key->key_data_length[ix])) : &PL_sv_undef;
+	} else
+		ST(0) = &PL_sv_undef;
+
+krb5_int16
+_type(key, ...)
+	Authen::Krb5::Admin::Key	key
+    ALIAS:
+	enc_type = 0
+	key_type = 0
+	salt_type = 1
+    PROTOTYPE: $;$
+    CODE:
+	if (key->key_data_ver > ix) {
+		if (items > 1)
+			key->key_data_type[ix] = SvIV(ST(1));
+		RETVAL = key->key_data_type[ix];
+	} else {
+		RETVAL = -1;
+	}
+    OUTPUT:
+	RETVAL
+
+krb5_int16
+kvno(key, ...)
+	Authen::Krb5::Admin::Key	key
+    PROTOTYPE: $;$
+    CODE:
+	if (items > 1)
+		key->key_data_kvno = SvIV(ST(1));
+	RETVAL = key->key_data_kvno;
+    OUTPUT:
+	RETVAL
+
+krb5_int16
+ver(key, ...)
+	Authen::Krb5::Admin::Key	key
+    PROTOTYPE: $;$
+    CODE:
+	if (items > 1)
+		key->key_data_ver = SvIV(ST(1));
+	RETVAL = key->key_data_ver;
+    OUTPUT:
+	RETVAL
+
+void
+DESTROY(key)
+	Authen::Krb5::Admin::Key	key
+    PREINIT:
+	int	i, n;
+    CODE:
+	n = key->key_data_ver == 1 ? 1 : 2;
+	for (i = 0; i < n; i++)
+		if (key->key_data_contents[i]) {
+			memset(key->key_data_contents[i], 0,
+			    key->key_data_length[i]);
+			Safefree(key->key_data_contents[i]);
+		}
+	Safefree(key);
+
+ # 
+ # Fake krb5_keyblock class--returned by randkey_principal but probably
+ # belongs in Authen::Krb5
+ # 
 
 MODULE = Authen::Krb5::Admin	PACKAGE = Authen::Krb5::Admin::Keyblock
 
@@ -866,6 +1496,10 @@ DESTROY(keyblock)
 		free(keyblock->contents);
 		keyblock->contents = NULL;
 	}
+
+ # 
+ # kadm5_policy_ent_rec class--uses kadm5_policy_mit meta-struct
+ # 
 
 MODULE = Authen::Krb5::Admin	PACKAGE = Authen::Krb5::Admin::Policy
 
@@ -996,6 +1630,10 @@ DESTROY(policy)
 	}
 	Safefree(policy);
 
+ # 
+ # kadm5_principal_ent_rec class--uses kadm5_principal_mit meta-struct
+ # 
+
 MODULE = Authen::Krb5::Admin	PACKAGE = Authen::Krb5::Admin::Principal
 
 Authen::Krb5::Admin::Principal
@@ -1045,13 +1683,46 @@ fail_auth_count(princ, ...)
     OUTPUT:
 	RETVAL
 
+void
+key_data(princ, ...)
+	Authen::Krb5::Admin::Principal	princ
+    PROTOTYPE: $;$
+    PREINIT:
+	SV    **p;
+	int	n;
+    PPCODE:
+	n = princ->kadm5_princ.n_key_data;
+	if (items > 1) {
+		for (p = princ->key_data; n--; p++)
+			SvREFCNT_dec(*p);
+		Renew(princ->key_data, items - 1, SV *);
+		Renew(princ->kadm5_princ.key_data, items - 1, krb5_key_data);
+		for (n = 0; n < items - 1; n++) {
+			krb5_key_data *p;
+			New(0, p, 1, krb5_key_data);
+			Copy(SvIV(SvRV(ST(n + 1))), p, 1, krb5_key_data);
+			princ->key_data[n] = newSViv((IV) p);
+			Copy(p, &princ->kadm5_princ.key_data[n], 1,
+			    krb5_key_data);
+		}
+		princ->kadm5_princ.n_key_data = items - 1;
+		princ->mask |= KADM5_KEY_DATA;
+	}
+	n = princ->kadm5_princ.n_key_data;
+	if (n > 0) {
+		EXTEND(sp, n);
+		for (p = princ->key_data; n--; p++)
+			PUSHs(sv_2mortal(sv_bless(newRV_inc(*p),
+			    gv_stashpv("Authen::Krb5::Admin::Key", 0))));
+	}
+
 krb5_kvno
 kvno(princ, ...)
 	Authen::Krb5::Admin::Principal	princ
     PROTOTYPE: $;$
     CODE:
 	if (items > 1) {
-		princ->kadm5_princ.kvno = SvIV(ST(1));
+		princ->kadm5_princ.kvno = SvUV(ST(1));
 		princ->mask |= KADM5_KVNO;
 	}
 	RETVAL = princ->kadm5_princ.kvno;
@@ -1134,7 +1805,7 @@ mkvno(princ, ...)
     PROTOTYPE: $;$
     CODE:
 	if (items > 1)
-		princ->kadm5_princ.mkvno = SvIV(ST(1));
+		princ->kadm5_princ.mkvno = SvUV(ST(1));
 	RETVAL = princ->kadm5_princ.mkvno;
     OUTPUT:
 	RETVAL
@@ -1163,8 +1834,8 @@ mod_name(princ, ...)
 		    (krb5_principal) SvIV(princ->krb5_princ_mod);
 		SvREFCNT_inc(princ->krb5_princ_mod);
 	}
-	ST(0) = newRV(princ->krb5_princ_mod);
-	sv_bless(ST(0), gv_stashpv("Authen::Krb5::Principal", 0));
+	ST(0) = sv_2mortal(sv_bless(newRV_inc(princ->krb5_princ_mod),
+	    gv_stashpv("Authen::Krb5::Principal", 0)));
 
 char *
 policy(princ, ...)
@@ -1227,8 +1898,8 @@ principal(princ, ...)
 		SvREFCNT_inc(princ->krb5_princ);
 		princ->mask |= KADM5_PRINCIPAL;
 	}
-	ST(0) = newRV(princ->krb5_princ);
-	sv_bless(ST(0), gv_stashpv("Authen::Krb5::Principal", 0));
+	ST(0) = sv_2mortal(sv_bless(newRV_inc(princ->krb5_princ),
+	    gv_stashpv("Authen::Krb5::Principal", 0)));
 
 krb5_timestamp
 pw_expiration(princ, ...)
@@ -1246,7 +1917,15 @@ pw_expiration(princ, ...)
 void
 DESTROY(princ)
 	Authen::Krb5::Admin::Principal	princ
+    PREINIT:
+	SV	      **p;
+	krb5_key_data  *key;
     CODE:
+	if (princ->key_data) {
+		for (p = princ->key_data; princ->kadm5_princ.n_key_data--; p++)
+			SvREFCNT_dec(*p);
+		Safefree(princ->key_data);
+	}
 	if (princ->krb5_princ && SvIOK(princ->krb5_princ))
 		SvREFCNT_dec(princ->krb5_princ);
 	if (princ->krb5_princ_mod && SvROK(princ->krb5_princ_mod))
@@ -1254,5 +1933,14 @@ DESTROY(princ)
 	if (princ->kadm5_princ.policy) {
 		Safefree(princ->kadm5_princ.policy);
 		princ->kadm5_princ.policy = NULL;
+	}
+	if (princ->kadm5_princ.tl_data) {
+		krb5_tl_data *tl;
+		while (princ->kadm5_princ.tl_data) {
+			tl = princ->kadm5_princ.tl_data->tl_data_next;
+			free(princ->kadm5_princ.tl_data->tl_data_contents);
+			free(princ->kadm5_princ.tl_data);
+			princ->kadm5_princ.tl_data = tl;
+		}
 	}
 	Safefree(princ);

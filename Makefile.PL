@@ -1,4 +1,28 @@
-# $Id: Makefile.PL,v 1.3 2002/05/22 03:25:48 ajk Exp $
+# Copyright (c) 2002 Andrew J. Korty
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+# OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+
+# $Id: Makefile.PL,v 1.7 2003/07/21 16:08:22 ajk Exp $
 
 use ExtUtils::MakeMaker;
 
@@ -26,6 +50,7 @@ my $KADM5_PRINCIPAL = undef;
 # deleted, etc.
 
 my $KADM5_TEST_NAME = 'perl_test';
+my $KADM5_TEST_NAME_2 = 'perl_test_2';
 
 ##### DO NOT CHANGE ANYTHING BELOW HERE #####
 
@@ -60,31 +85,40 @@ unless ($KADM5_TEST_NAME) {
 	$KADM5_TEST_NAME ||= 'perl_test';
 }
 
+unless ($KADM5_TEST_NAME_2) {
+	print 'Use user/instance (should NOT exist!) for testing renames ',
+	    '[perl_test_2]: ';
+	$KADM5_TEST_NAME_2 = <>;
+	chomp $KADM5_TEST_NAME_2;
+	$KADM5_TEST_NAME_2 ||= 'perl_test_2';
+}
+
 sub MY::test_via_harness {
 	package MY;
 	my $inherited = shift->SUPER::test_via_harness(@_);
-	$inherited =~ s/PERL_DL_NONLAZY=1 /PERL_KADM5_PRINCIPAL=$KADM5_PRINCIPAL PERL_KADM5_TEST_NAME=$KADM5_TEST_NAME /;
-	join '', "\tkinit -c /tmp/perl_test -l 5m ", $KADM5_PRINCIPAL,
-	    "\n", $inherited;
+	$inherited =~ s/PERL_DL_NONLAZY=1 /PERL_KADM5_PRINCIPAL=$KADM5_PRINCIPAL PERL_KADM5_TEST_NAME=$KADM5_TEST_NAME PERL_KADM5_TEST_NAME_2=$KADM5_TEST_NAME_2 /;
+	join '', "\tkinit -S kadmin/admin -c /tmp/perl_test -l 5m ",
+	    $KADM5_PRINCIPAL, "\n", $inherited;
 }
 
 sub MY::test_via_script {
 	package MY;
 	my $inherited = shift->SUPER::test_via_script(@_);
-	$inherited =~ s/PERL_DL_NONLAZY=1 /PERL_KADM5_PRINCIPAL=$KADM5_PRINCIPAL PERL_KADM5_TEST_NAME=$KADM5_TEST_NAME /;
-	join '', "\tkinit -c /tmp/perl_test -l 5m ", $KADM5_PRINCIPAL,
-	    "\n", $inherited;
+	$inherited =~ s/PERL_DL_NONLAZY=1 /PERL_KADM5_PRINCIPAL=$KADM5_PRINCIPAL PERL_KADM5_TEST_NAME=$KADM5_TEST_NAME PERL_KADM5_TEST_NAME_2=$KADM5_TEST_NAME_2 /;
+	join '', "\tkinit -S kadmin/admin -c /tmp/perl_test -l 5m ",
+	    $KADM5_PRINCIPAL, "\n", $inherited;
 }
 
 WriteMakefile(
-	NAME		=> 'Authen::Krb5::Admin',
-	VERSION_FROM	=> 'Admin.pm',
+	DEFINE		=> '',
+	INC		=> join(' ', '-I' . $KRB5_INCDIR, $KRB5_EXTRAINCS),
 	LIBS		=> [
 				join(' ', '-L' . $KRB5_LIBDIR,
 				    '-lkrb5 -lkadm5clnt', $cryptolib,
 				    '-lcom_err'),
 				$KRB5_EXTRALIBS
 			],
-	DEFINE		=> '',
-	INC		=> join ' ', '-I' . $KRB5_INCDIR, $KRB5_EXTRAINCS
+	NAME		=> 'Authen::Krb5::Admin',
+	PREREQ_PM	=> {'Authen::Krb5' => 1.2},
+	VERSION_FROM	=> 'Admin.pm',
 );

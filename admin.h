@@ -1,12 +1,34 @@
 /*
- * $Id: admin.h,v 1.3 2002/05/21 18:36:39 ajk Exp $
+ * Copyright 2001 by the Massachusetts Institute of Technology.
+ * All Rights Reserved.
+ *
+ * Export of this software from the United States of America may
+ *   require a specific license from the United States Government.
+ *   It is the responsibility of any person or organization contemplating
+ *   export to obtain such a license before exporting.
+ * 
+ * WITHIN THAT CONSTRAINT, permission to use, copy, modify, and
+ * distribute this software and its documentation for any purpose and
+ * without fee is hereby granted, provided that the above copyright
+ * notice appear in all copies and that both that copyright notice and
+ * this permission notice appear in supporting documentation, and that
+ * the name of M.I.T. not be used in advertising or publicity pertaining
+ * to distribution of the software without specific, written prior
+ * permission.  Furthermore if you modify this software you must label
+ * your software as modified software and not distribute it in such a
+ * fashion that it might be confused with the original M.I.T. software.
+ * M.I.T. makes no representations about the suitability of
+ * this software for any purpose.  It is provided "as is" without express
+ * or implied warranty.
+ *
+ * $Id: admin.h,v 1.6 2003/01/30 13:28:36 ajk Exp $
  *
  * Header file for Perl interface to libkadm5clnt
  *
  * The file admin.h from the MIT Kerberos 5 distribution does not get
  * installed by default and it depends on other header files that
  * don't get installed.  This file contains only what we need from
- * k5-int.h and admin.h.
+ * admin.h, kadm_err.h, and k5-int.h.
  */
 
 #if !defined(USE_KADM5_API_VERSION)
@@ -229,6 +251,14 @@ typedef struct _kadm5_config_params {
 	krb5_int32		 num_keysalts;
 } kadm5_config_params;
 
+/* Salt types */
+#define KRB5_KDB_SALTTYPE_NORMAL	0
+#define KRB5_KDB_SALTTYPE_V4		1
+#define KRB5_KDB_SALTTYPE_NOREALM	2
+#define KRB5_KDB_SALTTYPE_ONLYREALM	3
+#define KRB5_KDB_SALTTYPE_SPECIAL	4
+#define KRB5_KDB_SALTTYPE_AFS3		5
+
 /* Database attributes */
 #define	KRB5_KDB_DISALLOW_POSTDATED	0x00000001
 #define	KRB5_KDB_DISALLOW_FORWARDABLE	0x00000002
@@ -244,3 +274,60 @@ typedef struct _kadm5_config_params {
 #define KRB5_KDB_PWCHANGE_SERVICE	0x00002000
 #define KRB5_KDB_SUPPORT_DESMD5         0x00004000
 #define	KRB5_KDB_NEW_PRINC		0x00008000
+
+/* Error table values */
+#define KADM5_FAILURE                            (43787520L)
+#define KADM5_AUTH_GET                           (43787521L)
+#define KADM5_AUTH_ADD                           (43787522L)
+#define KADM5_AUTH_MODIFY                        (43787523L)
+#define KADM5_AUTH_DELETE                        (43787524L)
+#define KADM5_AUTH_INSUFFICIENT                  (43787525L)
+#define KADM5_BAD_DB                             (43787526L)
+#define KADM5_DUP                                (43787527L)
+#define KADM5_RPC_ERROR                          (43787528L)
+#define KADM5_NO_SRV                             (43787529L)
+#define KADM5_BAD_HIST_KEY                       (43787530L)
+#define KADM5_NOT_INIT                           (43787531L)
+#define KADM5_UNK_PRINC                          (43787532L)
+#define KADM5_UNK_POLICY                         (43787533L)
+#define KADM5_BAD_MASK                           (43787534L)
+#define KADM5_BAD_CLASS                          (43787535L)
+#define KADM5_BAD_LENGTH                         (43787536L)
+#define KADM5_BAD_POLICY                         (43787537L)
+#define KADM5_BAD_PRINCIPAL                      (43787538L)
+#define KADM5_BAD_AUX_ATTR                       (43787539L)
+#define KADM5_BAD_HISTORY                        (43787540L)
+#define KADM5_BAD_MIN_PASS_LIFE                  (43787541L)
+#define KADM5_PASS_Q_TOOSHORT                    (43787542L)
+#define KADM5_PASS_Q_CLASS                       (43787543L)
+#define KADM5_PASS_Q_DICT                        (43787544L)
+#define KADM5_PASS_REUSE                         (43787545L)
+#define KADM5_PASS_TOOSOON                       (43787546L)
+#define KADM5_POLICY_REF                         (43787547L)
+#define KADM5_INIT                               (43787548L)
+#define KADM5_BAD_PASSWORD                       (43787549L)
+#define KADM5_PROTECT_PRINCIPAL                  (43787550L)
+#define KADM5_BAD_SERVER_HANDLE                  (43787551L)
+#define KADM5_BAD_STRUCT_VERSION                 (43787552L)
+#define KADM5_OLD_STRUCT_VERSION                 (43787553L)
+#define KADM5_NEW_STRUCT_VERSION                 (43787554L)
+#define KADM5_BAD_API_VERSION                    (43787555L)
+#define KADM5_OLD_LIB_API_VERSION                (43787556L)
+#define KADM5_OLD_SERVER_API_VERSION             (43787557L)
+#define KADM5_NEW_LIB_API_VERSION                (43787558L)
+#define KADM5_NEW_SERVER_API_VERSION             (43787559L)
+#define KADM5_SECURE_PRINC_MISSING               (43787560L)
+#define KADM5_NO_RENAME_SALT                     (43787561L)
+#define KADM5_BAD_CLIENT_PARAMS                  (43787562L)
+#define KADM5_BAD_SERVER_PARAMS                  (43787563L)
+#define KADM5_AUTH_LIST                          (43787564L)
+#define KADM5_AUTH_CHANGEPW                      (43787565L)
+#define KADM5_GSS_ERROR                          (43787566L)
+#define KADM5_BAD_TL_TYPE                        (43787567L)
+#define KADM5_MISSING_CONF_PARAMS                (43787568L)
+#define KADM5_BAD_SERVER_NAME                    (43787569L)
+#define KADM5_AUTH_SETKEY                        (43787570L)
+#define KADM5_SETKEY_DUP_ENCTYPES                (43787571L)
+#define KADM5_SETV4KEY_INVAL_ENCTYPE             (43787572L)
+#define KADM5_SETKEY3_ETYPE_MISMATCH             (43787573L)
+

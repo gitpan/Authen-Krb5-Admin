@@ -1,13 +1,37 @@
 #!/usr/bin/perl -w
 
-# $Id: 34-cpw.t,v 1.4 2002/05/28 21:07:01 ajk Exp $
+# Copyright (c) 2002 Andrew J. Korty
+# All rights reserved.
+#
+# Redistribution and use in source and binary forms, with or without
+# modification, are permitted provided that the following conditions
+# are met:
+# 1. Redistributions of source code must retain the above copyright
+#    notice, this list of conditions and the following disclaimer.
+# 2. Redistributions in binary form must reproduce the above copyright
+#    notice, this list of conditions and the following disclaimer in the
+#    documentation and/or other materials provided with the distribution.
+#
+# THIS SOFTWARE IS PROVIDED BY THE AUTHOR AND CONTRIBUTORS ``AS IS'' AND
+# ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+# IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+# ARE DISCLAIMED.  IN NO EVENT SHALL THE AUTHOR OR CONTRIBUTORS BE LIABLE
+# FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL
+# DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS
+# OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION)
+# HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT
+# LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY
+# OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
+# SUCH DAMAGE.
+
+# $Id: 34-cpw.t,v 1.9 2003/02/06 20:38:10 ajk Exp $
 
 # Tests for changing passwords
 
 use strict;
 use Test;
 
-BEGIN { plan test => 5 }
+BEGIN { plan test => 8 }
 
 use Authen::Krb5;
 use Authen::Krb5::Admin qw(:constants);
@@ -26,9 +50,18 @@ ok $p;
 my $s = Authen::Krb5::parse_name('krbtgt/' . $p->realm);
 ok $p;
 
-my $pw = join '', map { chr rand 256 } 1..256;
+my $pw = join '', map { chr rand(255) + 1 } 1..256;
 
-ok $handle->chpass_principal($p, $pw) or warn Authen::Krb5::Admin::error;
+ok $handle->chpass_principal($p, $pw), 1, Authen::Krb5::Admin::error;
+
+my $ap = $handle->get_principal($p);
+ok $ap;
+
+$ap->attributes($ap->attributes & ~KRB5_KDB_DISALLOW_ALL_TIX);
+ok $handle->modify_principal($ap), 1, Authen::Krb5::Admin::error;
 
 ok Authen::Krb5::get_in_tkt_with_password($p, $s, $pw, undef)
     or warn Authen::Krb5::error;
+
+$ap->attributes($ap->attributes & KRB5_KDB_DISALLOW_ALL_TIX);
+ok $handle->modify_principal($ap), 1, Authen::Krb5::Admin::error;

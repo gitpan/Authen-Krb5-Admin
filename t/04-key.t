@@ -24,33 +24,30 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: 21-getpol.t,v 1.4 2002/10/09 16:36:35 ajk Exp $
+# $Id: 04-key.t,v 1.2 2002/10/09 16:36:35 ajk Exp $
 
-# Tests for retrieving policies
+# Tests for creating and manipulating Authen::Krb5::Admin::Key objects
 
 use strict;
 use Test;
 
-BEGIN { plan test => 9 }
+BEGIN { plan test => 7 }
 
-use Authen::Krb5;
 use Authen::Krb5::Admin qw(:constants);
 
-Authen::Krb5::init_context;
-Authen::Krb5::init_ets;
+my $k = Authen::Krb5::Admin::Key->new;
+ok $k;
 
-my $handle =
-    Authen::Krb5::Admin->init_with_creds($ENV{PERL_KADM5_PRINCIPAL},
-    Authen::Krb5::cc_resolve('/tmp/perl_test'));
-ok $handle or warn Authen::Krb5::Admin::error;
+ok $k->ver(2);
+ok $k->ver, 2;
 
-my $p = $handle->get_policy($ENV{PERL_KADM5_TEST_NAME});
+$k->enc_type(ENCTYPE_DES3_CBC_SHA1);
+ok $k->enc_type, ENCTYPE_DES3_CBC_SHA1;
+$k->key_type(ENCTYPE_DES3_CBC_SHA1);
+ok $k->key_type, ENCTYPE_DES3_CBC_SHA1;
 
-ok $p;
-ok $p->name, $ENV{PERL_KADM5_TEST_NAME};
-ok $p->pw_history_num, 1;
-ok $p->pw_max_life, 10;
-ok $p->pw_min_classes, 3;
-ok $p->pw_min_length, 4;
-ok $p->pw_min_life, 5;
-ok $p->policy_refcnt, 0;
+$k->salt_type(KRB5_KDB_SALTTYPE_V4);
+ok $k->salt_type, KRB5_KDB_SALTTYPE_V4;
+
+$k->kvno(5);
+ok $k->kvno, 5;

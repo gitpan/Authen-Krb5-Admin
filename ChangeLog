@@ -1,3 +1,74 @@
+VERSION 0.05
+============
+
+2004-02-12  Andrew Korty  <ajk@iu.edu>
+
+	* Admin.pm: Document rename_principal method.
+
+2003-07-21  Andrew Korty  <ajk@iu.edu>
+
+	* Makefile.PL: Require Admin::Krb5 1.2.
+
+2003-02-05  Andrew Korty  <ajk@iu.edu>
+
+	* Makefile.PL: Add another test principal name for
+	krb5_rename_principal().
+
+	* Admin.xs: Add interface to krb5_rename_principal().
+
+	* t/36-rename.t: Tests for rename_principal.
+
+2003-01-30  Andrew Korty  <ajk@iu.edu>
+
+	* Admin.pm: Principal and policy methods return TRUE or undef, not
+	error codes.
+
+	* Admin.pm, Admin.xs, admin.h: Add error table constants.
+
+2002-10-09  Andrew Korty  <ajk@iu.edu>
+
+	* Admin.xs: Overwrite key contents before reallocating memory.
+
+	* Admin.pm, Admin.xs, COPYING, Makefile.PL, admin.h,
+	t/00-loadme.t, t/01-config.t, t/02-policy.t, t/03-principal.t,
+	t/04-key.t, t/10-getprivs.t, t/20-addpol.t, t/21-getpol.t,
+	t/22-getpols.t, t/23-modpol.t, t/30-addprinc.t, t/31-getprinc.t,
+	t/32-getprincs.t, t/33-modprinc.t, t/34-cpw.t, t/35-randkey.t,
+	t/91-delprinc.t, t/92-delpol.t: Copyright notices.
+
+	* Admin.pm, Admin.xs: Add documentation for recent changes.
+
+2002-10-08  Andrew Korty  <ajk@iu.edu>
+
+	* Admin.xs, typemap: Use Kerberos 5 types.
+
+2002-10-04  Andrew Korty  <ajk@iu.edu>
+
+	* Admin.xs: Do a better job of mortalizing stack values and
+	freeing data.
+
+	* Admin.xs, admin.h, t/04-key.t, t/35-randkey.t, typemap,
+	Admin.pm: Add support for krb5_key_data in the form of an
+	Authen::Krb5::Admin::Key class.
+
+2002-10-03  Andrew Korty  <ajk@iu.edu>
+
+	* t/33-modprinc.t, t/34-cpw.t: Allow authentication to our test
+	principal temporarily so we can change passwords.
+
+	* t/33-modprinc.t: Check status of second get_principal.
+
+	* t/30-addprinc.t, t/33-modprinc.t, t/31-getprinc.t: Set
+	KRB5_KDB_DISALLOW_ALL_TIX so no one can authenticate as our test
+	principal.
+
+	* t/34-cpw.t, t/30-addprinc.t: Don't embed NULs in password.
+
+2002-10-01  Andrew J. Korty  <ajk@iu.edu>
+
+	* Makefile.PL: Explicitly get a ticket for the kadmin/admin
+	service in case TGTs are disallowed for that principal.
+
 VERSION 0.04
 ============
 

@@ -23,7 +23,7 @@
  * OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
  * SUCH DAMAGE.
  *
- * $Id: Admin.xs,v 1.20 2004/12/18 22:58:29 ajk Exp $
+ * $Id: Admin.xs,v 1.21 2006/12/28 18:23:25 ajk Exp $
  */
 
 #include "EXTERN.h"
@@ -331,6 +331,12 @@ constant(char *name, int arg)
 #else
 			goto not_there;
 #endif
+		if (strEQ(name, "KADM5_CONFIG_AUTH_NOFALLBACK"))
+#ifdef KADM5_CONFIG_AUTH_NOFALLBACK
+			return KADM5_CONFIG_AUTH_NOFALLBACK;
+#else
+			goto not_there;
+#endif
 		if (strEQ(name, "KADM5_CONFIG_DBNAME"))
 #ifdef KADM5_CONFIG_DBNAME
 			return KADM5_CONFIG_DBNAME;
@@ -400,6 +406,18 @@ constant(char *name, int arg)
 		if (strEQ(name, "KADM5_CONFIG_MKEY_NAME"))
 #ifdef KADM5_CONFIG_MKEY_NAME
 			return KADM5_CONFIG_MKEY_NAME;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_CONFIG_NO_AUTH"))
+#ifdef KADM5_CONFIG_NO_AUTH
+			return KADM5_CONFIG_NO_AUTH;
+#else
+			goto not_there;
+#endif
+		if (strEQ(name, "KADM5_CONFIG_OLD_AUTH_GSSAPI"))
+#ifdef KADM5_CONFIG_OLD_AUTH_GSSAPI
+			return KADM5_CONFIG_OLD_AUTH_GSSAPI;
 #else
 			goto not_there;
 #endif
@@ -968,7 +986,7 @@ typedef void				*Authen__Krb5__Admin;
 /*
  * The Authen::Krb5::Admin object is just the void * returned by the
  * init functions, init_with_{creds,password,skey}, which are this
- * packages constructors.
+ * package's constructors.
  */
 
 MODULE = Authen::Krb5::Admin	PACKAGE = Authen::Krb5::Admin	PREFIX = kadm5_
@@ -1142,8 +1160,13 @@ kadm5_init_with_creds(CLASS, client, cc, service = KADM5_ADMIN_SERVICE, config =
 	krb5_ui_4			 struct_version
 	krb5_ui_4			 api_version
     CODE:
+#ifdef KRB5_PLUGIN_NO_HANDLE    /* hack to test for 1.5 */
+	err = kadm5_init_with_creds(client, cc, service, config,
+	    struct_version, api_version, NULL, &RETVAL);
+#else
 	err = kadm5_init_with_creds(client, cc, service, config,
 	    struct_version, api_version, &RETVAL);
+#endif
 	if (err)
 		XSRETURN_UNDEF;
     OUTPUT:
@@ -1159,8 +1182,13 @@ kadm5_init_with_password(CLASS, client, pw = NULL, service = KADM5_ADMIN_SERVICE
 	krb5_ui_4			 struct_version
 	krb5_ui_4			 api_version
     CODE:
+#ifdef KRB5_PLUGIN_NO_HANDLE    /* hack to test for 1.5 */
+	err = kadm5_init_with_password(client, pw, service, config,
+	    struct_version, api_version, NULL, &RETVAL);
+#else
 	err = kadm5_init_with_password(client, pw, service, config,
 	    struct_version, api_version, &RETVAL);
+#endif
 	if (err)
 		XSRETURN_UNDEF;
     OUTPUT:
@@ -1176,8 +1204,13 @@ kadm5_init_with_skey(CLASS, client, keytab = NULL, service = KADM5_ADMIN_SERVICE
 	krb5_ui_4			 struct_version
 	krb5_ui_4			 api_version
     CODE:
+#ifdef KRB5_PLUGIN_NO_HANDLE    /* hack to test for 1.5 */
+	err = kadm5_init_with_skey(client, keytab, service, config,
+	    struct_version, api_version, NULL, &RETVAL);
+#else
 	err = kadm5_init_with_skey(client, keytab, service, config,
 	    struct_version, api_version, &RETVAL);
+#endif
 	if (err)
 		XSRETURN_UNDEF;
     OUTPUT:
@@ -1317,6 +1350,7 @@ mask(config, ...)
     OUTPUT:
 	RETVAL
 
+#ifdef KADM5_CONFIG_PROFILE
 char *
 profile(config, ...)
 	Authen::Krb5::Admin::Config	config
@@ -1338,6 +1372,8 @@ profile(config, ...)
 	ST(0) = config->profile
 	    ? sv_2mortal(newSVpv(config->profile, 0))
 	    : &PL_sv_undef;
+
+#endif
 
 char *
 realm(config, ...)
@@ -1366,8 +1402,10 @@ DESTROY(config)
 	Authen::Krb5::Admin::Config	config
     CODE:
 	if (config) {
+#ifdef KADM5_CONFIG_PROFILE
 		if (config->profile)
 			Safefree(config->profile);
+#endif
 		if (config->dbname)
 			Safefree(config->dbname);
 		if (config->mkey_name)

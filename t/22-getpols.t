@@ -24,7 +24,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: 22-getpols.t,v 1.4 2002/10/09 16:36:35 ajk Exp $
+# $Id: 22-getpols.t,v 1.5 2006/12/28 18:30:24 ajk Exp $
 
 # Tests for listing policies
 
@@ -41,7 +41,7 @@ Authen::Krb5::init_ets;
 
 my $handle =
     Authen::Krb5::Admin->init_with_creds($ENV{PERL_KADM5_PRINCIPAL},
-    Authen::Krb5::cc_resolve('/tmp/perl_test'));
+    Authen::Krb5::cc_resolve($ENV{PERL_KADM5_TEST_CACHE}));
 ok $handle or warn Authen::Krb5::Admin::error;
 
 my $p = Authen::Krb5::Admin::Policy->new;

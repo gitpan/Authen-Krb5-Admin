@@ -24,14 +24,14 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: 91-delprinc.t,v 1.5 2002/10/09 16:36:35 ajk Exp $
+# $Id: 91-delprinc.t,v 1.7 2006/12/28 18:30:24 ajk Exp $
 
 # Tests for deleting principals
 
 use strict;
 use Test;
 
-BEGIN { plan test => 3 }
+BEGIN { plan test => 5 }
 
 use Authen::Krb5;
 use Authen::Krb5::Admin qw(:constants);
@@ -41,10 +41,13 @@ Authen::Krb5::init_ets;
 
 my $handle =
     Authen::Krb5::Admin->init_with_creds($ENV{PERL_KADM5_PRINCIPAL},
-    Authen::Krb5::cc_resolve('/tmp/perl_test'));
+    Authen::Krb5::cc_resolve($ENV{PERL_KADM5_TEST_CACHE}));
 ok $handle or warn Authen::Krb5::Admin::error;
 
 my $p = Authen::Krb5::parse_name($ENV{PERL_KADM5_TEST_NAME});
 ok $p;
 
 ok $handle->delete_principal($p) or warn Authen::Krb5::Admin::error;
+
+ok !$handle->get_principal($p);
+ok Authen::Krb5::Admin::error =~ /does not exist/;

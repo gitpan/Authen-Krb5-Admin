@@ -24,7 +24,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: 01-config.t,v 1.4 2002/10/09 16:36:35 ajk Exp $
+# $Id: 01-config.t,v 1.5 2006/12/28 18:30:24 ajk Exp $
 
 # Tests for creating and manipulating Authen::Krb5::Admin::Principal
 # objects
@@ -51,9 +51,13 @@ $c->kpasswd_port(2);
 ok $c->kpasswd_port, 2;
 ok $c->mask & KADM5_CONFIG_KPASSWD_PORT;
 
-$c->profile('/tmp/krb5.conf');
-ok $c->profile, '/tmp/krb5.conf';
-ok $c->mask & KADM5_CONFIG_PROFILE;
+my $do_not_have_profile = eval { KADM5_CONFIG_PROFILE }
+                        ? '' : 'Skip unless KADM5_CONFIG_PROFILE is defined';
+unless ($do_not_have_profile) {
+    $c->profile('/tmp/krb5.conf');
+}
+skip $do_not_have_profile, eval { $c->profile() eq '/tmp/krb5.conf' };
+skip $do_not_have_profile, eval { $c->mask & KADM5_CONFIG_PROFILE   };
 
 $c->realm('PERL.TEST');
 ok $c->realm, 'PERL.TEST';

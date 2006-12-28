@@ -22,7 +22,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Makefile.PL,v 1.8 2004/12/18 17:34:00 ajk Exp $
+# $Id: Makefile.PL,v 1.10 2006/12/28 18:37:32 ajk Exp $
 
 use ExtUtils::MakeMaker;
 
@@ -33,6 +33,7 @@ my ($PREFIX) = grep { -r $_ . '/include/krb5.h' }
     qw(/opt/krb5 /usr/local /usr /usr/kerberos) or die 'Cannot find Kerberos 5';
 print $PREFIX, "\n";
 
+my $KRB5_BINDIR = join '/', $PREFIX, 'bin';
 my $KRB5_LIBDIR = join '/', $PREFIX, 'lib';
 my $KRB5_INCDIR = join '/', $PREFIX, 'include';
 
@@ -72,7 +73,7 @@ if ( -r $KRB5_LIBDIR . '/libk5crypto.a' ||
 unless ($KADM5_PRINCIPAL) {
 	print 'Authenticate as user/instance[@REALM] for testing [',
 	    $ENV{USER}, '/admin]: ';
-	$KADM5_PRINCIPAL = <>;
+	$KADM5_PRINCIPAL = <STDIN>;
 	chomp $KADM5_PRINCIPAL;
 	$KADM5_PRINCIPAL ||= $ENV{USER} . '/admin';
 }
@@ -80,7 +81,7 @@ unless ($KADM5_PRINCIPAL) {
 unless ($KADM5_TEST_NAME) {
 	print 'Use user/instance (should NOT exist!) for testing ',
 	    '[perl_test]: ';
-	$KADM5_TEST_NAME = <>;
+	$KADM5_TEST_NAME = <STDIN>;
 	chomp $KADM5_TEST_NAME;
 	$KADM5_TEST_NAME ||= 'perl_test';
 }
@@ -88,25 +89,34 @@ unless ($KADM5_TEST_NAME) {
 unless ($KADM5_TEST_NAME_2) {
 	print 'Use user/instance (should NOT exist!) for testing renames ',
 	    '[perl_test_2]: ';
-	$KADM5_TEST_NAME_2 = <>;
+	$KADM5_TEST_NAME_2 = <STDIN>;
 	chomp $KADM5_TEST_NAME_2;
 	$KADM5_TEST_NAME_2 ||= 'perl_test_2';
 }
 
+sub MY::insert_kinit_maybe {
+    my ($commands) = @_;
+    my $test_cache = $ENV{PERL_KADM5_TEST_CACHE} || '/tmp/perl_test';
+    my $new_vars = join ' ', "PERL_KADM5_PRINCIPAL=$KADM5_PRINCIPAL",
+        "PERL_KADM5_TEST_NAME=$KADM5_TEST_NAME",
+        "PERL_KADM5_TEST_NAME_2=$KADM5_TEST_NAME_2",
+        "PERL_KADM5_TEST_CACHE=$test_cache ";
+    $commands =~ s/PERL_DL_NONLAZY=1 /$new_vars /;
+    return exists $ENV{PERL_KADM5_TEST_CACHE}
+         ? $commands
+         : "\t$KRB5_BINDIR/kinit -S kadmin/admin -c $test_cache -l 5m "
+           . "$KADM5_PRINCIPAL\n$commands"
+         ;
+}
+
 sub MY::test_via_harness {
-	package MY;
-	my $inherited = shift->SUPER::test_via_harness(@_);
-	$inherited =~ s/PERL_DL_NONLAZY=1 /PERL_KADM5_PRINCIPAL=$KADM5_PRINCIPAL PERL_KADM5_TEST_NAME=$KADM5_TEST_NAME PERL_KADM5_TEST_NAME_2=$KADM5_TEST_NAME_2 /;
-	join '', "\tkinit -S kadmin/admin -c /tmp/perl_test -l 5m ",
-	    $KADM5_PRINCIPAL, "\n", $inherited;
+    package MY;
+    return insert_kinit_maybe shift->SUPER::test_via_harness(@_);
 }
 
 sub MY::test_via_script {
-	package MY;
-	my $inherited = shift->SUPER::test_via_script(@_);
-	$inherited =~ s/PERL_DL_NONLAZY=1 /PERL_KADM5_PRINCIPAL=$KADM5_PRINCIPAL PERL_KADM5_TEST_NAME=$KADM5_TEST_NAME PERL_KADM5_TEST_NAME_2=$KADM5_TEST_NAME_2 /;
-	join '', "\tkinit -S kadmin/admin -c /tmp/perl_test -l 5m ",
-	    $KADM5_PRINCIPAL, "\n", $inherited;
+    package MY;
+    return insert_kinit_maybe shift->SUPER::test_via_script(@_);
 }
 
 WriteMakefile(

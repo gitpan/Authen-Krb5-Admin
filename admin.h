@@ -21,7 +21,7 @@
  * this software for any purpose.  It is provided "as is" without express
  * or implied warranty.
  *
- * $Id: admin.h,v 1.6 2003/01/30 13:28:36 ajk Exp $
+ * $Id: admin.h,v 1.7 2006/12/28 18:23:25 ajk Exp $
  *
  * Header file for Perl interface to libkadm5clnt
  *
@@ -73,7 +73,7 @@ typedef	char	*kadm5_policy_t;
 typedef long	 kadm5_ret_t;
 
 /*
- * Succsessfull return code
+ * Succsessful return code
  */
 #define KADM5_OK	0
 
@@ -126,7 +126,9 @@ typedef long	 kadm5_ret_t;
 #define KADM5_CONFIG_ENCTYPE		0x000200
 #define KADM5_CONFIG_ADBNAME		0x000400
 #define KADM5_CONFIG_ADB_LOCKFILE	0x000800
+#ifndef KRB5_PLUGIN_NO_HANDLE    /* hack to test for 1.5 */
 #define KADM5_CONFIG_PROFILE		0x001000
+#endif
 #define KADM5_CONFIG_ACL_FILE		0x002000
 #define KADM5_CONFIG_KADMIND_PORT	0x004000
 #define KADM5_CONFIG_ENCTYPES		0x008000
@@ -134,7 +136,9 @@ typedef long	 kadm5_ret_t;
 #define KADM5_CONFIG_DICT_FILE		0x020000
 #define KADM5_CONFIG_MKEY_FROM_KBD	0x040000
 #define KADM5_CONFIG_KPASSWD_PORT	0x080000
-
+#define KADM5_CONFIG_OLD_AUTH_GSSAPI	0x100000
+#define KADM5_CONFIG_NO_AUTH		0x200000
+#define KADM5_CONFIG_AUTH_NOFALLBACK	0x400000
 /*
  * permission bits
  */
@@ -146,7 +150,6 @@ typedef long	 kadm5_ret_t;
 /*
  * API versioning constants
  */
-     
 #define KADM5_MASK_BITS		0xffffff00
 
 #define KADM5_STRUCT_VERSION_MASK	0x12345600
@@ -226,7 +229,9 @@ typedef struct __krb5_key_salt_tuple {
 typedef struct _kadm5_config_params {
 	long			 mask;
 	char			*realm;
+#ifndef KRB5_PLUGIN_NO_HANDLE    /* hack to test for 1.5 */
 	char			*profile;
+#endif
 	int			 kadmind_port;
 	int			 kpasswd_port;
 	
@@ -330,4 +335,5 @@ typedef struct _kadm5_config_params {
 #define KADM5_SETKEY_DUP_ENCTYPES                (43787571L)
 #define KADM5_SETV4KEY_INVAL_ENCTYPE             (43787572L)
 #define KADM5_SETKEY3_ETYPE_MISMATCH             (43787573L)
-
+#define KADM5_MISSING_KRB5_CONF_PARAMS           (43787574L)
+#define KADM5_XDR_FAILURE                        (43787575L)

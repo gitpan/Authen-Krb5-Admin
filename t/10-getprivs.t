@@ -24,7 +24,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: 10-getprivs.t,v 1.4 2002/10/09 16:36:35 ajk Exp $
+# $Id: 10-getprivs.t,v 1.5 2006/12/28 18:30:24 ajk Exp $
 
 # Tests for modifying principals
 
@@ -37,11 +37,10 @@ use Authen::Krb5;
 use Authen::Krb5::Admin qw(:constants);
 
 Authen::Krb5::init_context;
-Authen::Krb5::init_ets;
 
 my $handle =
     Authen::Krb5::Admin->init_with_creds($ENV{PERL_KADM5_PRINCIPAL},
-    Authen::Krb5::cc_resolve('/tmp/perl_test'));
+    Authen::Krb5::cc_resolve($ENV{PERL_KADM5_TEST_CACHE}));
 ok $handle or warn Authen::Krb5::Admin::error;
 
 ok $handle->get_privs & (KADM5_PRIV_GET | KADM5_PRIV_ADD |

@@ -1,7 +1,19 @@
 VERSION 0.08
 ============
 
+2007-01-05  Andrew Korty  <ajk@iu.edu>
+
+	* ppport.h: new version, complete with INT2PTR()
+	* Admin.xs, typemap: Convert to four-column indent.
+	* Admin.xs: Copy the policy name we get from kadm5_get_principal()
+	into memory allocated with New() and then free() what was given to
+	us.  That way, we can just Safefree() it in DESTROY().
+
 2006-12-28  Andrew J. Korty  <ajk@iu.edu>
+
+	* Admin.xs, typemap: Use INT2PTR() and friends to make sure void *
+	and Perl values are compatible when perl is built with
+	-Duse64bitint.
 
 	* Makefile.PL, t/01-config.t, t/10-getprivs.t, t/20-addpol.t,
 	t/21-getpol.t, t/22-getpols.t, t/23-modpol.t, t/30-addprinc.t,

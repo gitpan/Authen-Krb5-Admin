@@ -22,7 +22,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Admin.pm,v 1.22 2007/01/06 01:07:46 ajk Exp $
+# $Id: Admin.pm,v 1.23 2008/01/30 12:32:22 ajk Exp $
 
 package Authen::Krb5::Admin;
 
@@ -191,7 +191,7 @@ require AutoLoader;
         KADM5_CONFIG_OLD_AUTH_GSSAPI
 );
 %EXPORT_TAGS = (constants => \@EXPORT_OK);
-$VERSION = '0.09';
+$VERSION = '0.10';
 
 # Preloaded methods go here.
 

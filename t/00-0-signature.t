@@ -24,41 +24,29 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: 01-config.t,v 1.5 2006/12/28 18:30:24 ajk Exp $
+# $Id: 00-loadme.t,v 1.2 2002/10/09 16:36:35 ajk Exp $
 
-# Tests for creating and manipulating Authen::Krb5::Admin::Principal
-# objects
+# check module signature
 
 use strict;
-use Test;
 
-BEGIN { plan test => 11 }
+print "1..1\n";
 
-use Authen::Krb5::Admin qw(:constants);
-
-my $c = Authen::Krb5::Admin::Config->new;
-ok $c;
-
-$c->admin_server('example.com');
-ok $c->admin_server, 'example.com';
-ok $c->mask & KADM5_CONFIG_ADMIN_SERVER;
-
-$c->kadmind_port(1);
-ok $c->kadmind_port, 1;
-ok $c->mask & KADM5_CONFIG_KADMIND_PORT;
-
-$c->kpasswd_port(2);
-ok $c->kpasswd_port, 2;
-ok $c->mask & KADM5_CONFIG_KPASSWD_PORT;
-
-my $do_not_have_profile = eval { KADM5_CONFIG_PROFILE }
-                        ? '' : 'Skip unless KADM5_CONFIG_PROFILE is defined';
-unless ($do_not_have_profile) {
-    $c->profile('/tmp/krb5.conf');
+if (!-s 'SIGNATURE') {
+    print "ok 1 # skip No signature file found\n";
 }
-skip $do_not_have_profile, eval { $c->profile() eq '/tmp/krb5.conf' };
-skip $do_not_have_profile, eval { $c->mask & KADM5_CONFIG_PROFILE   };
 
-$c->realm('PERL.TEST');
-ok $c->realm, 'PERL.TEST';
-ok $c->mask & KADM5_CONFIG_REALM;
+elsif (!eval { require Module::Signature; 1 }) {
+    print "ok 1 # skip ", "Consider installing Module::Signature ",
+          "so you can verify the integrity of this distribution.\n";
+}
+
+elsif ( !eval { require Socket; Socket::inet_aton('pgp.mit.edu') } ) {
+    print "ok 1 # skip ", "Cannot connect to the keyserver\n";
+}
+
+else {
+    ( Module::Signature::verify() == Module::Signature::SIGNATURE_OK() )
+        or print "not ";
+    print "ok 1 # Valid signature\n";
+}

@@ -3,10 +3,14 @@ Admin.xs
 COPYING
 ChangeLog
 MANIFEST
+MANIFEST.SKIP
+META.yml
 Makefile.PL
 README
+SIGNATURE
 admin.h
 ppport.h
+t/00-0-signature.t
 t/00-loadme.t
 t/01-config.t
 t/02-policy.t
@@ -27,4 +31,3 @@ t/36-rename.t
 t/91-delprinc.t
 t/92-delpol.t
 typemap
-META.yml                                 Module meta-data (added by MakeMaker)

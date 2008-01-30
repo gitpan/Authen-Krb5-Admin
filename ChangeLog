@@ -1,4 +1,20 @@
-VERSION 0.08
+VERSION 0.10
+============
+	
+2008-01-30  Andrew J. Korty  <ajk@iu.edu>
+
+	* MANIFEST, MANIFEST.SKIP, META.yml, Makefile.PL: Include and
+	verify a module signature.
+
+	* t/34-cpw.t: Skip tests that tickle what might be an
+	incompatibility between Authen::Krb5 1.7 and MIT 1.6.3 that causes
+	get_in_tkt_with_password to segfault.
+	
+	* Makefile.PL: Using $KRB5_EXTRAINCS, include files from
+	$PREFIX/include/et.  On RHEL 5, this directory is where com_err.h
+	is kept.
+
+VERSION 0.09
 ============
 
 2007-01-05  Andrew Korty  <ajk@iu.edu>

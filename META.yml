@@ -1,11 +1,16 @@
-# http://module-build.sourceforge.net/META-spec.html
-#XXXXXXX This is a prototype!!!  It will change in the future!!! XXXXX#
-name:         Authen-Krb5-Admin
-version:      0.09
-version_from: Admin.pm
-installdirs:  site
-requires:
-    Authen::Krb5:                  1.2
-
+--- #YAML:1.0
+name: Authen-Krb5-Admin
+abstract: Perl extension for MIT Kerberos 5 admin interface
+version: 0.10
+author:
+  - Andrew J. Korty <ajk@iu.edu>
+license: bsd
 distribution_type: module
-generated_by: ExtUtils::MakeMaker version 6.30
+requires:
+  Authen::Krb5: 1.2
+build_requires:
+  Test: 0
+meta-spec:
+  version: 1.3
+  url: http://module-build.sourceforge.net/META-spec-v1.3.html
+generated_by: Andrew J. Korty <ajk@iu.edu>

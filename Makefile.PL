@@ -22,7 +22,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: Makefile.PL,v 1.13 2007/01/06 01:00:21 ajk Exp $
+# $Id: Makefile.PL,v 1.15 2008/01/30 13:59:47 ajk Exp $
 
 use strict;
 
@@ -43,7 +43,7 @@ my $KRB5_INCDIR = "$PREFIX/include";
 # any extra libraries or include flags
 
 my $KRB5_EXTRALIBS = '';
-my $KRB5_EXTRAINCS = '';
+my $KRB5_EXTRAINCS = "-I$PREFIX/include/et";
 
 # principal used by test suite to authenticate to kadmin server (will
 # prompt if undef--you must do your own kinit if you set this)
@@ -131,6 +131,7 @@ WriteMakefile(
     LIBS         => ["-L$KRB5_LIBDIR -lkrb5 -lkadm5clnt $cryptolib -lcom_err",
                      $KRB5_EXTRALIBS],
     NAME         => 'Authen::Krb5::Admin',
+    NO_META      => 1,
     PREREQ_PM    => {'Authen::Krb5' => 1.2},
     VERSION_FROM => 'Admin.pm',
 );

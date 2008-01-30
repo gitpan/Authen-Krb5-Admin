@@ -24,7 +24,7 @@
 # OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF
 # SUCH DAMAGE.
 
-# $Id: 34-cpw.t,v 1.10 2006/12/28 18:30:24 ajk Exp $
+# $Id: 34-cpw.t,v 1.11 2008/01/30 13:07:11 ajk Exp $
 
 # Tests for changing passwords
 
@@ -57,11 +57,22 @@ ok $handle->chpass_principal($p, $pw), 1, Authen::Krb5::Admin::error;
 my $ap = $handle->get_principal($p);
 ok $ap;
 
-$ap->attributes($ap->attributes & ~KRB5_KDB_DISALLOW_ALL_TIX);
-ok $handle->modify_principal($ap), 1, Authen::Krb5::Admin::error;
+# Authen::Krb5 1.7 get_in_tkt_with_password segfaults with MIT 1.6.3
+my $mit_version = `krb5-config --version 2>/dev/null` || '';
+if ($Authen::Krb5::VERSION eq '1.7'
+    && $mit_version =~ /release 1\.6\./) {
+    foreach (1..3) {
+        skip 'MIT / Authen::Krb5 incompatibility';
+    }
+}
 
-ok Authen::Krb5::get_in_tkt_with_password($p, $s, $pw, undef)
-    or warn Authen::Krb5::error;
+else {
+    $ap->attributes($ap->attributes & ~KRB5_KDB_DISALLOW_ALL_TIX);
+    ok $handle->modify_principal($ap), 1, Authen::Krb5::Admin::error;
 
-$ap->attributes($ap->attributes & KRB5_KDB_DISALLOW_ALL_TIX);
-ok $handle->modify_principal($ap), 1, Authen::Krb5::Admin::error;
+    ok Authen::Krb5::get_in_tkt_with_password($p, $s, $pw, undef)
+       or warn Authen::Krb5::error;
+
+    $ap->attributes($ap->attributes & KRB5_KDB_DISALLOW_ALL_TIX);
+    ok $handle->modify_principal($ap), 1, Authen::Krb5::Admin::error;
+}

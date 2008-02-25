@@ -1,3 +1,11 @@
+VERSION 0.11
+============
+
+2008-02-25  Andrew J. Korty  <ajk@iu.edu>
+
+	* Makefile.PL: Exit 0 if Kerberos 5 can't be found so as not to
+	produce a FAIL from CPAN Testers.
+
 VERSION 0.10
 ============
 	

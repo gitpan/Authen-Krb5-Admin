@@ -191,7 +191,7 @@ require AutoLoader;
         KADM5_CONFIG_OLD_AUTH_GSSAPI
 );
 %EXPORT_TAGS = (constants => \@EXPORT_OK);
-$VERSION = '0.11';
+$VERSION = '0.12';
 
 # Preloaded methods go here.
 
@@ -667,7 +667,9 @@ functions.
 
 =head1 AUTHOR
 
-Andrew J. Korty <ajk@iu.edu>
+Stephen Quinney <squinney@inf.ed.ac.uk>
+
+Author Emeritus: Andrew J. Korty <ajk@iu.edu>
 
 =head1 SEE ALSO
 

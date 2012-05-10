@@ -1,3 +1,18 @@
+VERSION 0.13
+============
+
+2012-04-26  Stephen Quinney <squinney@inf.ed.ac.uk>
+
+	* Use the Kerberos admin.h rather than a local copy where
+	   possible. Closes: #49964
+	* Handle the API change which requires the context argument be
+	   passed to the various init functions. There may be a better way
+	   to do this but it requires a change to Authen::Krb5.
+	* Reduced the set of libraries we link against as we do not use
+  	   libkrb5 and libk5crypto directly, patch taken from Debian.
+	* Applied patch from Kevan Carstensen to export the
+	   KRB5_KDB_ACCESS_ERROR constant. Closes: #77093.
+
 VERSION 0.12
 ============
 
@@ -5,6 +20,7 @@ VERSION 0.12
 
 	* New maintainer, thanks to Andrew Korty for all his good work.
 	* No code changes in this release.
+	* Closes: #69831
 
 VERSION 0.11
 ============

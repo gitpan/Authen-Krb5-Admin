@@ -28,11 +28,33 @@ use strict;
 
 use ExtUtils::MakeMaker;
 
+# Use the krb5-config tool if available
+
+my $KRB5_CONFIG;
+print 'checking for krb5-config ... ';
+for my $path ( $ENV{KRB5_CONFIG}, '/usr/local/bin/krb5-config', '/usr/bin/krb5-config' ) {
+  if ( $path && -x $path ) {
+    $KRB5_CONFIG = $path;
+    last;
+  }
+}
+if ($KRB5_CONFIG) {
+  print "found\n";
+} else {
+  print "not found, will use fallback methods\n"
+}
+
 # location of Kerberos 5 libraries and header files
 
 print 'checking for Kerberos 5 prefix ... ';
-my ($PREFIX) = grep { -r "$_/include/krb5.h" }
-                    qw(/opt/krb5 /usr/local /usr /usr/kerberos);
+my $PREFIX;
+if ($KRB5_CONFIG) {
+  chomp( $PREFIX = `$KRB5_CONFIG --prefix` );
+} else {
+  ($PREFIX) = grep { -r "$_/include/krb5.h" }
+              qw(/opt/krb5 /usr/local /usr /usr/kerberos);
+}
+
 if ($PREFIX) {
     print "$PREFIX\n";
 } else {
@@ -40,9 +62,9 @@ if ($PREFIX) {
     exit 0;
 }
 
-my $KRB5_BINDIR = "$PREFIX/bin"    ;
-my $KRB5_LIBDIR = "$PREFIX/lib"    ;
-my $KRB5_INCDIR = "$PREFIX/include";
+my $KRB5_BINDIR = $ENV{KRB5_BINDIR} || "$PREFIX/bin"    ;
+my $KRB5_LIBDIR = $ENV{KRB5_LIBDIR} || "$PREFIX/lib"    ;
+my $KRB5_INCDIR = $ENV{KRB5_INCDIR} || "$PREFIX/include";
 
 # any extra libraries or include flags
 
@@ -76,6 +98,15 @@ if ( -r "$KRB5_LIBDIR/libk5crypto.a" ||
 } else {
     print "not found (using libcrypto)\n";
     $cryptolib = '-lcrypto';
+}
+
+print 'checking for kadm5/admin.h ... ';
+my $KRB5_DEFS = '';
+if ( -f "$KRB5_INCDIR/kadm5/admin.h" ) {
+  print "found\n";
+} else {
+  print "not found, assuming this is Kerberos 1.6\n";
+  $KRB5_DEFS='-DUSE_LOCAL_ADMINH';
 }
 
 # get values for test suite
@@ -130,9 +161,9 @@ sub MY::test_via_script {
 }
 
 WriteMakefile(
-    DEFINE       => '',
+    DEFINE       => "$KRB5_DEFS",
     INC          => "-I$KRB5_INCDIR $KRB5_EXTRAINCS",
-    LIBS         => ["-L$KRB5_LIBDIR -lkrb5 -lkadm5clnt $cryptolib -lcom_err",
+    LIBS         => ["-L$KRB5_LIBDIR -lkadm5clnt -lcom_err",
                      $KRB5_EXTRALIBS],
     NAME         => 'Authen::Krb5::Admin',
     NO_META      => 1,

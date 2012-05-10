@@ -31,7 +31,12 @@
 #include "XSUB.h"
 #include <krb5.h>
 #include <com_err.h>
+#ifdef USE_LOCAL_ADMINH
 #include "admin.h"
+#else
+#include <krb5/krb5.h>
+#include <kadm5/admin.h>
+#endif
 #include "ppport.h"
 
 static int
@@ -124,6 +129,12 @@ constant(char *name, int arg)
         if (strEQ(name, "KADM5_API_VERSION_2"))
 #ifdef KADM5_API_VERSION_2
             return KADM5_API_VERSION_2;
+#else
+            goto not_there;
+#endif
+        if (strEQ(name, "KADM5_API_VERSION_3"))
+#ifdef KADM5_API_VERSION_3
+            return KADM5_API_VERSION_3;
 #else
             goto not_there;
 #endif
@@ -919,6 +930,12 @@ constant(char *name, int arg)
 #else
             goto not_there;
 #endif
+        if (strEQ(name, "KRB5_KDB_ACCESS_ERROR"))
+#ifdef KRB5_KDB_ACCESS_ERROR
+            return KRB5_KDB_ACCESS_ERROR;
+#else
+            goto not_there;
+#endif
         break;
     }
     errno = EINVAL;
@@ -930,6 +947,11 @@ constant(char *name, int arg)
 }
 
 static kadm5_ret_t err;
+
+#ifdef KADM5_API_VERSION_3
+/* krb5 1.8+ requires a context argument for init_with_* functions */
+static krb5_context context = NULL;
+#endif
 
 /*
  * Some Kerberos data objects contain others, so we don't always want
@@ -1180,8 +1202,17 @@ kadm5_init_with_creds(CLASS, client, cc, service = KADM5_ADMIN_SERVICE, config =
     krb5_ui_4                    api_version
   CODE:
 #ifdef KRB5_PLUGIN_NO_HANDLE    /* hack to test for 1.5 */
+#ifdef KADM5_API_VERSION_3
+    if (!context) {
+        err = krb5_init_context(&context);
+        if (err) die("Unable to initialize context");
+    }
+    err = kadm5_init_with_creds(context, client, cc, service, config,
+      struct_version, api_version, NULL, &RETVAL);
+#else
     err = kadm5_init_with_creds(client, cc, service, config, struct_version,
       api_version, NULL, &RETVAL);
+#endif
 #else
     err = kadm5_init_with_creds(client, cc, service, config, struct_version,
       api_version, &RETVAL);
@@ -1202,8 +1233,17 @@ kadm5_init_with_password(CLASS, client, pw = NULL, service = KADM5_ADMIN_SERVICE
     krb5_ui_4                    api_version
   CODE:
 #ifdef KRB5_PLUGIN_NO_HANDLE    /* hack to test for 1.5 */
+#ifdef KADM5_API_VERSION_3
+    if (!context) {
+        err = krb5_init_context(&context);
+        if (err) die("Unable to initialize context");
+    }
+    err = kadm5_init_with_password(context, client, pw, service,
+      config, struct_version, api_version, NULL, &RETVAL);
+#else
     err = kadm5_init_with_password(client, pw, service, config, struct_version,
       api_version, NULL, &RETVAL);
+#endif
 #else
     err = kadm5_init_with_password(client, pw, service, config, struct_version,
       api_version, &RETVAL);
@@ -1224,8 +1264,17 @@ kadm5_init_with_skey(CLASS, client, keytab = NULL, service = KADM5_ADMIN_SERVICE
     krb5_ui_4                    api_version
   CODE:
 #ifdef KRB5_PLUGIN_NO_HANDLE    /* hack to test for 1.5 */
+#ifdef KADM5_API_VERSION_3
+    if (!context) {
+        err = krb5_init_context(&context);
+        if (err) die("Unable to initialize context");
+    }
+    err = kadm5_init_with_skey(context, client, keytab, service,
+      config, struct_version, api_version, NULL, &RETVAL);
+#else
     err = kadm5_init_with_skey(client, keytab, service, config, struct_version,
       api_version, NULL, &RETVAL);
+#endif
 #else
     err = kadm5_init_with_skey(client, keytab, service, config, struct_version,
       api_version, &RETVAL);
@@ -1443,10 +1492,13 @@ DESTROY(config)
             Safefree(config->acl_file);
         if (config->realm)
             Safefree(config->realm);
+#ifndef KADM5_API_VERSION_3
         if (config->admin_dbname)
             Safefree(config->admin_dbname);
         if (config->admin_lockfile)
             Safefree(config->admin_lockfile);
+#endif
+
     }
     Safefree(config);
 

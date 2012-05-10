@@ -1,7 +1,7 @@
 --- #YAML:1.0
 name: Authen-Krb5-Admin
 abstract: Perl extension for MIT Kerberos 5 admin interface
-version: 0.12
+version: 0.13
 author:
   - Stephen Quinney <squinney@inf.ed.ac.uk>
 license: bsd

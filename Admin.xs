@@ -30,6 +30,10 @@
 #include "perl.h"
 #include "XSUB.h"
 #include <krb5.h>
+#ifdef HAVE_KDB_H
+#define SECURID /* This should not be necessary */
+#include <kdb.h>
+#endif /* HAVE_KDB_H */
 #include <com_err.h>
 #ifdef USE_LOCAL_ADMINH
 #include "admin.h"
@@ -741,6 +745,24 @@ constant(char *name, int arg)
         if (strEQ(name, "KADM5_PW_MIN_LIFE"))
 #ifdef KADM5_PW_MIN_LIFE
             return KADM5_PW_MIN_LIFE;
+#else
+            goto not_there;
+#endif
+        if (strEQ(name, "KADM5_PW_MAX_FAILURE"))
+#ifdef KADM5_PW_MAX_FAILURE
+            return KADM5_PW_MAX_FAILURE;
+#else
+            goto not_there;
+#endif
+        if (strEQ(name, "KADM5_PW_FAILURE_COUNT_INTERVAL"))
+#ifdef KADM5_PW_FAILURE_COUNT_INTERVAL
+            return KADM5_PW_FAILURE_COUNT_INTERVAL;
+#else
+            goto not_there;
+#endif
+        if (strEQ(name, "KADM5_PW_LOCKOUT_DURATION"))
+#ifdef KADM5_PW_LOCKOUT_DURATION
+            return KADM5_PW_LOCKOUT_DURATION;
 #else
             goto not_there;
 #endif
@@ -1673,6 +1695,49 @@ pw_max_life(policy, ...)
   OUTPUT:
     RETVAL
 
+#ifdef KADM5_API_VERSION_3 /* new lockout attributes */
+
+krb5_kvno
+pw_max_fail(policy, ...)
+    Authen::Krb5::Admin::Policy policy
+  PROTOTYPE: $;$
+  CODE:
+    if (items > 1) {
+        policy->policy.pw_max_fail = SvIV(ST(1));
+        policy->mask |= KADM5_PW_MAX_FAILURE;
+    }
+    RETVAL = policy->policy.pw_max_fail;
+  OUTPUT:
+    RETVAL
+
+krb5_deltat
+pw_failcnt_interval(policy, ...)
+    Authen::Krb5::Admin::Policy policy
+  PROTOTYPE: $;$
+  CODE:
+    if (items > 1) {
+        policy->policy.pw_failcnt_interval = SvIV(ST(1));
+        policy->mask |= KADM5_PW_FAILURE_COUNT_INTERVAL;
+    }
+    RETVAL = policy->policy.pw_failcnt_interval;
+  OUTPUT:
+    RETVAL
+
+krb5_deltat
+pw_lockout_duration(policy, ...)
+    Authen::Krb5::Admin::Policy policy
+  PROTOTYPE: $;$
+  CODE:
+    if (items > 1) {
+        policy->policy.pw_lockout_duration = SvIV(ST(1));
+        policy->mask |= KADM5_PW_LOCKOUT_DURATION;
+    }
+    RETVAL = policy->policy.pw_lockout_duration;
+  OUTPUT:
+    RETVAL
+
+#endif /* KADM5_API_VERSION_3 - lockout attributes */
+
 long
 pw_min_classes(policy, ...)
     Authen::Krb5::Admin::Policy policy
@@ -2016,6 +2081,97 @@ pw_expiration(princ, ...)
     RETVAL = princ->kadm5_princ.pw_expiration;
   OUTPUT:
     RETVAL
+
+#ifdef HAVE_KDB_H
+
+void
+db_args(princ, ...)
+    Authen::Krb5::Admin::Principal princ
+  PROTOTYPE: $;@
+  PREINIT:
+    krb5_tl_data *tl, *last_tl;
+    krb5_octet **db_args;
+    int i;
+
+  PPCODE:
+    /* arglist will be items - 1, but the last item should be a NULL. */
+    Newxz(db_args, items, krb5_octet *);
+
+    /* pull db args off the stack */
+    /* grab the arg stack */
+    for (i = 1; i < items; i++) {
+        db_args[i - 1] = (krb5_octet *)SvPV_nolen(ST(i));
+    }
+
+    last_tl = NULL;
+    tl      = princ->kadm5_princ.tl_data;
+    while (tl != NULL) {
+        krb5_tl_data *next_tl = tl->tl_data_next;
+
+        /* bail out early for anything but db_args */
+        if (tl->tl_data_type != KRB5_TL_DB_ARGS) {
+            last_tl = tl;
+            tl      = next_tl;
+            continue;
+        }
+
+        /* otherwise: */
+
+        /* pinched from kdb5.c */
+        if (((char *) tl->tl_data_contents)[tl->tl_data_length - 1] != '\0') {
+            /* croak */
+            Perl_croak(aTHX_ "Unsafe string in principal tail data");
+        }
+        else {
+            /* extend and push the stack with a new mortal SvPV */
+            mXPUSHp((char *) tl->tl_data_contents, tl->tl_data_length - 1);
+            /* only two hard things in computer science: cache
+               expiration, naming things, and off-by-one errors. */
+
+            /* PS that copies the string, right? because i'm about to
+               nuke it. */
+    
+            /* we're only doing surgery if there is something to
+               replace these with */
+            if (items > 1) {
+                /* stitch next record to last record if it exists */
+                if (last_tl != NULL) last_tl->tl_data_next = next_tl;
+                /* stitch the next one onto if this is the first */
+                else if (tl == princ->kadm5_princ.tl_data)
+                    princ->kadm5_princ.tl_data = next_tl;
+
+                /* poof */
+                free(tl->tl_data_contents);
+                free(tl);
+
+            }
+
+            /* set this either way */
+            tl = next_tl;
+        }
+    }
+
+    /* add new db args to tl_data */
+    if (items > 1) {
+        for (i = 0; i < items - 1; i++) {
+            krb5_tl_data *new_tl;
+
+            new_tl = calloc(1, sizeof(*new_tl));
+            new_tl->tl_data_type     = KRB5_TL_DB_ARGS;
+            new_tl->tl_data_length   = strlen(db_args[i]) + 1;
+            new_tl->tl_data_contents = db_args[i];
+            new_tl->tl_data_next     = NULL;
+
+            /* append to list */
+            if (last_tl != NULL) last_tl->tl_data_next = new_tl;
+            else princ->kadm5_princ.tl_data = new_tl;
+
+            /* either way, it becomes the new tail */
+            last_tl = new_tl;
+        }
+    }
+
+#endif /* HAVE_KDB_H */
 
 void
 DESTROY(princ)

@@ -106,7 +106,15 @@ if ( -f "$KRB5_INCDIR/kadm5/admin.h" ) {
   print "found\n";
 } else {
   print "not found, assuming this is Kerberos 1.6\n";
-  $KRB5_DEFS='-DUSE_LOCAL_ADMINH';
+  $KRB5_DEFS .= ' -DUSE_LOCAL_ADMINH';
+}
+
+print 'checking for kdb.h ... ';
+if ( -f "$KRB5_INCDIR/kdb.h" ) {
+  print "found\n";
+  $KRB5_DEFS .= ' -DHAVE_KDB_H';
+} else {
+  print "not found, assuming this is Kerberos 1.6\n";
 }
 
 # get values for test suite
@@ -145,7 +153,7 @@ sub MY::insert_kinit_maybe {
     $commands =~ s/PERL_DL_NONLAZY=1 /$new_vars /;
     return exists $ENV{PERL_KADM5_TEST_CACHE}
          ? $commands
-         : "\t$KRB5_BINDIR/kinit -S kadmin/admin -c $test_cache -l 5m "
+         : "\t$KRB5_BINDIR/kinit -S kadmin/admin -c $test_cache -l 50m "
            . "$KADM5_PRINCIPAL\n$commands"
          ;
 }

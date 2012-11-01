@@ -193,7 +193,7 @@ require AutoLoader;
 	KRB5_KDB_ACCESS_ERROR
 );
 %EXPORT_TAGS = (constants => \@EXPORT_OK);
-$VERSION = '0.13';
+$VERSION = '0.15';
 
 # Preloaded methods go here.
 
@@ -396,6 +396,19 @@ previous I<pw_history_num> passwords.
 Default number of seconds a password lasts before the principal is
 required to change it
 
+=item * pw_max_fail {KADM5_PW_MAX_FAILURE}
+
+The maximum allowed number of attempts before a lockout.
+
+=item * pw_failcnt_interval {KADM5_PW_FAILURE_COUNT_INTERVAL}
+
+The period after which the bad preauthentication count will be reset.
+
+=item * pw_lockout_duration {KADM5_PW_LOCKOUT_DURATION}
+
+The period in which lockout is enforced; a duration of zero means that
+the principal must be manually unlocked.
+
 =item * pw_min_classes {KADM5_PW_MIN_CLASSES}
 
 Number (between 1 and 5, inclusive) of required character classes
@@ -512,6 +525,21 @@ L<Authen::Krb5(3)>)
 =item * pw_expiration {KADM5_PW_EXPIRATION}
 
 Expire time (in seconds since the Epoch) of the principal's password
+
+=item * db_args [@ARGS]
+
+When called without any C<@ARGS>, returns the list of arguments that
+will be passed into the underlying database, as with C<addprinc -x> in
+C<kadmin>. If C<@ARGS> is non-empty, it will replace any database
+arguments, which will then be returned, like this:
+
+    my @old = $principal->db_args;
+    # -or-
+    my @old = $principal->db_args(@new);
+
+    # The RPC call will ignore the tail data unless
+    # you set this flag:
+    $principal->mask($principal->mask | KADM5_TL_DATA);
 
 =back
 

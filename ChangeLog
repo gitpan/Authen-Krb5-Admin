@@ -1,3 +1,22 @@
+VERSION 0.15
+============
+
+2012-11-01  Stephen Quinney <squinney@inf.ed.ac.uk>
+
+	* Added a db_args method to Authen::Krb5::Admin::Principal, thanks
+	   to Dorian Taylor for the patch. This closes: #80205. This is
+	   only available with MIT Kerberos version 1.7 and newer.
+
+VERSION 0.14 (not released)
+============
+
+2012-08-06  Stephen Quinney <squinney@inf.ed.ac.uk>
+
+	* Implemented support for the new administrative lockout options
+           ( pw_max_fail, pw_failcnt_interval and pw_lockout_duration)
+	   see http://k5wiki.kerberos.org/wiki/Projects/Lockout
+	   for full details. This closes #76830.
+
 VERSION 0.13
 ============
 

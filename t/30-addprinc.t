@@ -31,7 +31,7 @@
 use strict;
 use Test;
 
-BEGIN { plan test => 20 }
+BEGIN { plan test => 22 }
 
 use Authen::Krb5;
 use Authen::Krb5::Admin qw(:constants);
@@ -49,6 +49,14 @@ ok $p;
 
 my $ap = Authen::Krb5::Admin::Principal->new;
 ok $ap;
+
+my @args = $ap->db_args('derp');
+ok !@args;
+
+@args = $ap->db_args;
+#warn $_ for unpack 'C*', $args[0];
+#warn $args[0];
+ok $args[0] eq "derp";
 
 $ap->attributes(KRB5_KDB_DISALLOW_ALL_TIX | KRB5_KDB_DISALLOW_TGT_BASED);
 ok $ap->attributes, KRB5_KDB_DISALLOW_ALL_TIX | KRB5_KDB_DISALLOW_TGT_BASED;
@@ -82,5 +90,6 @@ $ap->pw_expiration(1021908826);
 ok $ap->pw_expiration, 1021908826;
 ok $ap->mask & KADM5_PW_EXPIRATION;
 
-ok $handle->create_principal($ap, join '', map { chr rand(255) + 1 } 1..256)
+# utf8 gets ya
+ok $handle->create_principal($ap, join '', map { chr(rand(127) + 1) } 1..256)
     or warn Authen::Krb5::Admin::error;

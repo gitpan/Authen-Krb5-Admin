@@ -193,7 +193,7 @@ require AutoLoader;
 	KRB5_KDB_ACCESS_ERROR
 );
 %EXPORT_TAGS = (constants => \@EXPORT_OK);
-$VERSION = '0.15';
+$VERSION = '0.16';
 
 # Preloaded methods go here.
 

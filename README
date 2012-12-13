@@ -28,7 +28,7 @@ the location of your Kerberos installation. This tool is part of the
 krb5-devel package on Redhat and Fedora systems and is in the
 libkrb5-dev package on Debian and Ubuntu systems. If it is not located
 in /usr/local/bin/krb5-config or /usr/bin/krb5-config you can specify
-the location using the KRB5_CONFIG environment variable.
+the location using the KRB5_CONFTOOL environment variable.
 
 If you have a non-standard installation you can override the following
 locations by setting environment variables before running the

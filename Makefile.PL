@@ -30,15 +30,15 @@ use ExtUtils::MakeMaker;
 
 # Use the krb5-config tool if available
 
-my $KRB5_CONFIG;
+my $KRB5_CONFTOOL;
 print 'checking for krb5-config ... ';
-for my $path ( $ENV{KRB5_CONFIG}, '/usr/local/bin/krb5-config', '/usr/bin/krb5-config' ) {
+for my $path ( $ENV{KRB5_CONFTOOL}, '/usr/local/bin/krb5-config', '/usr/bin/krb5-config' ) {
   if ( $path && -x $path ) {
-    $KRB5_CONFIG = $path;
+    $KRB5_CONFTOOL = $path;
     last;
   }
 }
-if ($KRB5_CONFIG) {
+if ($KRB5_CONFTOOL) {
   print "found\n";
 } else {
   print "not found, will use fallback methods\n"
@@ -48,8 +48,8 @@ if ($KRB5_CONFIG) {
 
 print 'checking for Kerberos 5 prefix ... ';
 my $PREFIX;
-if ($KRB5_CONFIG) {
-  chomp( $PREFIX = `$KRB5_CONFIG --prefix` );
+if ($KRB5_CONFTOOL) {
+  chomp( $PREFIX = `$KRB5_CONFTOOL --prefix` );
 } else {
   ($PREFIX) = grep { -r "$_/include/krb5.h" }
               qw(/opt/krb5 /usr/local /usr /usr/kerberos);

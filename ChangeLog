@@ -1,3 +1,18 @@
+VERSION 0.17
+============
+
+2013-02-20  Stephen Quinney <squinney@inf.ed.ac.uk>
+
+	* Added basic support for KADM5_API_VERSION_4 (which is in krb5
+	   1.11). Thanks to Christian Krause for the bug report, this
+	   closes: #83459
+	* Reworked the db_args method to avoid a double free bug.
+	   Thanks to Dorian Taylor for hunting down the cause of the
+	   problem.
+	* Added an error_code() function which simply returns the integer
+ 	   value of the error from the most recent function call. Thanks
+	   to D. Thomas for the suggestion, closes: #81110
+
 VERSION 0.16
 ============
 

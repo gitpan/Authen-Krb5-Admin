@@ -142,6 +142,12 @@ constant(char *name, int arg)
 #else
             goto not_there;
 #endif
+        if (strEQ(name, "KADM5_API_VERSION_4"))
+#ifdef KADM5_API_VERSION_4
+            return KADM5_API_VERSION_4;
+#else
+            goto not_there;
+#endif
         if (strEQ(name, "KADM5_API_VERSION_MASK"))
 #ifdef KADM5_API_VERSION_MASK
             return KADM5_API_VERSION_MASK;
@@ -1106,6 +1112,13 @@ kadm5_error(e = 0)
         SvIOK_on(ST(0));
     }
 
+int
+kadm5_error_code()
+  CODE:
+    RETVAL = err;
+  OUTPUT:
+    RETVAL
+
 Authen::Krb5::Admin::Policy
 kadm5_get_policy(handle, name = "default")
     Authen::Krb5::Admin  handle
@@ -1506,8 +1519,11 @@ DESTROY(config)
             Safefree(config->keysalts);
         if (config->admin_server)
             Safefree(config->admin_server);
+/* admin_keytab was removed in API_VERSION 4 */
+#ifndef KADM5_API_VERSION_4
         if (config->admin_keytab)
             Safefree(config->admin_keytab);
+#endif
         if (config->dict_file)
             Safefree(config->dict_file);
         if (config->acl_file)
@@ -2100,7 +2116,13 @@ db_args(princ, ...)
     /* pull db args off the stack */
     /* grab the arg stack */
     for (i = 1; i < items; i++) {
-        db_args[i - 1] = (krb5_octet *)SvPV_nolen(ST(i));
+        krb5_octet *this_arg;
+        STRLEN length = sv_len(ST(i)) + 1;
+        /* Perl_croak(aTHX_ "%d", length);*/
+        Newxz(this_arg, length, krb5_octet);
+        Copy((krb5_octet *)SvPV(ST(i), length), this_arg, length, krb5_octet);
+        /* db_args[i - 1] = (krb5_octet *)SvPV_nolen(ST(i)); */
+        db_args[i - 1] = this_arg;
     }
 
     last_tl = NULL;
@@ -2123,8 +2145,13 @@ db_args(princ, ...)
             Perl_croak(aTHX_ "Unsafe string in principal tail data");
         }
         else {
+            SV * tl_out;
+            
+            tl_out = newSVpv((const char *) tl->tl_data_contents, 0);
+            XPUSHs(tl_out);
+
             /* extend and push the stack with a new mortal SvPV */
-            mXPUSHp((char *) tl->tl_data_contents, tl->tl_data_length - 1);
+            /* mXPUSHp((char *) tl->tl_data_contents, tl->tl_data_length - 1); */
             /* only two hard things in computer science: cache
                expiration, naming things, and off-by-one errors. */
 
@@ -2170,6 +2197,9 @@ db_args(princ, ...)
             last_tl = new_tl;
         }
     }
+
+    /* explictly get rid of db_args */
+    Safefree(db_args);
 
 #endif /* HAVE_KDB_H */
 

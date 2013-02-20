@@ -55,6 +55,7 @@ require AutoLoader;
 	KADM5_API_VERSION_1
 	KADM5_API_VERSION_2
 	KADM5_API_VERSION_3
+	KADM5_API_VERSION_4
 	KADM5_API_VERSION_MASK
 	KADM5_ATTRIBUTES
 	KADM5_AUTH_ADD
@@ -193,7 +194,7 @@ require AutoLoader;
 	KRB5_KDB_ACCESS_ERROR
 );
 %EXPORT_TAGS = (constants => \@EXPORT_OK);
-$VERSION = '0.16';
+$VERSION = '0.17';
 
 # Preloaded methods go here.
 
@@ -665,6 +666,11 @@ parameters will be modified accordingly.  Clears KADM5_POLICY.
 Return value that acts like $! (see L<perlvar(1)>) for the most
 recent Authen::Krb5::Admin call.  With error code $error, return
 the error message corresponding to that error code.
+
+=item * $error_code = Authen::Krb5::Admin::error_code
+
+Returns the value of the error code for the most recent
+Authen::Krb5::Admin call as a simple integer.
 
 =item * $privs = $kadm5->get_privs
 
